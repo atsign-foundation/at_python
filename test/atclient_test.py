@@ -1,14 +1,15 @@
-import unittest
+import unittest, random, string
 from configparser import ConfigParser
 
 from at_client import AtClient
 from at_client.common import AtSign
 from at_client.common.keys import PublicKey, SelfKey, SharedKey
+from at_client.exception import *
 
 class AtClientTest(unittest.TestCase):
     verbose = False
-    atsign1 = ""
-    atsign2 = ""
+    atsign1 = atsign2 = ""
+    root_server = secondary_server = None
 
     @classmethod
     def setUpClass(cls) -> None:
@@ -26,10 +27,19 @@ class AtClientTest(unittest.TestCase):
 
     def test_get_at_keys(self):
         """Test Scan Verb using get_at_keys"""
-        atsign = AtSign(self.atsign1)
+
+        # Test to fetch all keys
+        atsign = AtSign(self.atsign2)
         atclient = AtClient(atsign, verbose=self.verbose)
         my_keys = atclient.get_at_keys("", fetch_metadata=True)
         self.assertTrue(len(my_keys)>0)
+
+        # Test Regex functionality
+        my_keys = atclient.get_at_keys("test", fetch_metadata=True)
+        self.assertEquals(len(my_keys), 4)
+
+        my_keys = atclient.get_at_keys("no_key", fetch_metadata=True)
+        self.assertEquals(len(my_keys), 0)
 
     def test_put_public_key(self):
         """Test Put Function with Public Key"""
@@ -62,21 +72,107 @@ class AtClientTest(unittest.TestCase):
         sk = SharedKey("test_shared_key2", shared_by, shared_with)
         response = atclient.put(sk, "test2")
         self.assertIsNotNone(response)
+
+        # Invalid atsign with atclient
+        with self.assertRaises(AtIllegalArgumentException):
+            shared_by = AtSign(self.atsign1)
+            shared_with = AtSign(self.atsign2)
+            atclient = AtClient(shared_by, verbose=self.verbose)
+            sk = SharedKey("test_shared_key3", shared_with, shared_by)
+            response = atclient.put(sk, "test2")
+
+    def test_get_public_encryption_key(self):
+        atsign1 = AtSign(self.atsign1)
+        atsign2 = AtSign(self.atsign2)
+        atclient = AtClient(atsign1, verbose=self.verbose)
+        key = atclient.get_public_encryption_key(atsign2)
+        self.assertIsNotNone(key)
+
+        # Server not found Exception
+        with self.assertRaises(AtSecondaryNotFoundException):
+            unknown_atsign = AtSign("unknown")
+            key = atclient.get_public_encryption_key(unknown_atsign)
+
+        # Key not found
+        _atsign = AtSign("@6armadillo")
+        key = atclient.get_public_encryption_key(_atsign)
+        self.assertIsNone(key)
+
+    def test_create_shared_encryption_key(self):
+        atsign1 = AtSign(self.atsign1)
+        atsign2 = AtSign(self.atsign2)
+        atclient = AtClient(atsign1, verbose=self.verbose)
+        sk = SharedKey("test_shared_key", atsign1, atsign2)
+        key = atclient.create_shared_encryption_key(sk)
+        self.assertIsNotNone(key)
+
+        # Key not found Exception
+        with self.assertRaises(AtKeyNotFoundException):
+            armadilo_atsign = AtSign("6armadillo")
+            sk = SharedKey("test_shared_key", atsign1, armadilo_atsign)
+            key = atclient.create_shared_encryption_key(sk)
+
+    def test_get_encryption_key_shared_by_me(self):
+        atsign1 = AtSign(self.atsign1)
+        atsign2 = AtSign(self.atsign2)
+        atclient = AtClient(atsign1, verbose=self.verbose)
+        sk = SharedKey("test_shared_key", atsign1, atsign2)
+        key = atclient.get_encryption_key_shared_by_me(sk)
+        self.assertIsNotNone(key)
+
+        # Key not found Exception
+        with self.assertRaises(AtKeyNotFoundException):
+            armadilo_atsign = AtSign("6armadillo")
+            sk = SharedKey("test_shared_key", atsign1, armadilo_atsign)
+            key = atclient.get_encryption_key_shared_by_me(sk)
+
+    def test_get_encryption_key_shared_by_other(self):
+        atsign1 = AtSign(self.atsign1)
+        atsign2 = AtSign(self.atsign2)
+        atclient = AtClient(atsign1, verbose=self.verbose)
+        sk = SharedKey("test_shared_key2", atsign2, atsign1)
+        key = atclient.get_encryption_key_shared_by_other(sk)
+        self.assertIsNotNone(key)
+
+        # Key not found Exception
+        with self.assertRaises(AtKeyNotFoundException):
+            armadilo_atsign = AtSign("6armadillo")
+            sk = SharedKey("test_shared_key", atsign1, armadilo_atsign)
+            key = atclient.get_encryption_key_shared_by_other(sk)
+
+    def test_not_implemented_key_exception(self):
+        atsign1 = AtSign(self.atsign1)
+        atclient = AtClient(atsign1, verbose=self.verbose)
         
+        with self.assertRaises(NotImplementedError):
+            atclient.put(None, None)
+
+        with self.assertRaises(NotImplementedError):
+            atclient.get(None)
+
+        with self.assertRaises(NotImplementedError):
+            atclient.delete(None)
 
     def test_get_self_key(self):
         """Test Get Function with Self Key"""
         atsign = AtSign(self.atsign1)
         atclient = AtClient(atsign, verbose=self.verbose)
         sk = SelfKey("test_self_key", atsign)
+        response = atclient.put(sk, "test1")
         response = atclient.get(sk)
         self.assertEqual("test1", response)
+
+        # Self Key not found test
+        with self.assertRaises(AtKeyNotFoundException):
+            unknown = SelfKey("unknown", atsign)
+            response = atclient.get(unknown)
 
     def test_get_public_key(self):
         """Test Get Function with Public Key"""
         atsign = AtSign(self.atsign1)
         atclient = AtClient(atsign, verbose=self.verbose)
         pk = PublicKey("test_public_key", atsign)
+        response = atclient.put(pk, "test1")
         response = atclient.get(pk)
         self.assertEqual("test1", response)
 
@@ -85,26 +181,40 @@ class AtClientTest(unittest.TestCase):
         response = atclient.get(pk)
         self.assertEqual("test1", response)
 
+        # Public Key not found test
+        with self.assertRaises(AtInternalServerException):
+            unknown_pk = PublicKey("unknown_key", atsign)
+            response = atclient.get(unknown_pk)
+
+
     def test_get_shared_key(self):
         """Test Get Function with Shared Key"""
         # Shared by me with other
         shared_by = AtSign(self.atsign1)
         shared_with = AtSign(self.atsign2)
         atclient = AtClient(shared_by, verbose=self.verbose)
-        sk = SharedKey("test_shared_key1", shared_by, shared_with)
+        sk = SharedKey("test_shared_key1445", shared_by, shared_with)
+        atclient.put(sk, "test")
         response = atclient.get(sk)
-        self.assertEqual("test1", response)
+        self.assertEqual("test", response)
 
         # Shared by other with me
         sk = SharedKey("test_shared_key2", shared_with, shared_by)
+        atclient.put(SharedKey("test_shared_key2", shared_by, shared_with), "test2")
         response = atclient.get(sk)
         self.assertEqual("test2", response)
+
+        # Shared Key not found test
+        with self.assertRaises(AtKeyNotFoundException):
+            unknown = SharedKey("unknown", shared_by, shared_with)
+            response = atclient.get(unknown)
 
     def test_delete_public_key(self):
         """Test Delete Function with Public Key"""
         atsign = AtSign(self.atsign1)
         atclient = AtClient(atsign, verbose=self.verbose)
-        pk = PublicKey("delete_test", atsign)
+        random_key_name  = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+        pk = PublicKey(random_key_name, atsign)
         response = atclient.put(pk, "test1")
 
         response = atclient.delete(pk)
@@ -114,7 +224,8 @@ class AtClientTest(unittest.TestCase):
         """Test Delete Function with Self Key"""
         atsign = AtSign(self.atsign1)
         atclient = AtClient(atsign, verbose=self.verbose)
-        sk = SelfKey("delete_self_key_test", atsign)
+        random_key_name  = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+        sk = SelfKey(random_key_name, atsign)
         response = atclient.put(sk, "test1")
 
         response = atclient.delete(sk)
@@ -125,7 +236,8 @@ class AtClientTest(unittest.TestCase):
         shared_by = AtSign(self.atsign1)
         shared_with = AtSign(self.atsign2)
         atclient = AtClient(shared_by, verbose=self.verbose)
-        sk = SharedKey("delete_shared_key_test", shared_by, shared_with)
+        random_key_name  = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
+        sk = SharedKey(random_key_name, shared_by, shared_with)
         response = atclient.put(sk, "test1")
 
         response = atclient.delete(sk)

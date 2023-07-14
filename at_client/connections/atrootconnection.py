@@ -1,6 +1,6 @@
 import ssl
 from ..common import AtSign
-from ..exception.atexception import AtException
+from ..exception.atexception import *
 from .atconnection import AtConnection
 from .response import Response
 from .address import Address
@@ -110,13 +110,13 @@ class AtRootConnection(AtConnection):
             try:
                 self.connect()
             except Exception as e:
-                # Connect will only throw an AtException if authentication fails. Root connections do not require authentication.
+                # Connect will only throw an Exception if authentication fails. Root connections do not require authentication.
                 raise AtException(f"Root Connection failed - {e}")
 
         response = self.execute_command(atsign.without_prefix, False).get_raw_data_response()
 
         if response == "null":
-            raise AtException(f"Root lookup returned null for {atsign}")
+            raise AtSecondaryNotFoundException(f"Root lookup returned null for {atsign}")
         else:
             try:
                 return Address.from_string(response)

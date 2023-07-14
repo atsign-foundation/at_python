@@ -77,14 +77,17 @@ class AtClient(ABC):
 
         command = "plookup:publickey" + shared_with.to_string()
         try:
-            response = self.secondary_connection.execute_command(command)
-        except Exception as e:
+            response = self.secondary_connection.execute_command(command, False)
+        except AtSecondaryNotFoundException as e: raise e
+        except AtSecondaryConnectException as e:
             raise AtSecondaryConnectException(f"Failed to execute {command} - {e}")
 
         if response.is_error():
-            if isinstance(response.get_exception(), AtKeyNotFoundException): return None
+            ex = response.get_exception()
+            if isinstance(ex, AtKeyNotFoundException) or isinstance(ex, AtInternalServerException): 
+                return None
             else:
-                raise response.get_exception()
+                raise ex
         else:
             return response.get_raw_data_response()
 
@@ -130,8 +133,8 @@ class AtClient(ABC):
         command = "llookup:" + to_lookup
         try:
             response = self.secondary_connection.execute_command(command, False)
-        except Exception as e:
-            raise AtException(f"Failed to execute {command} - {e}")
+        except AtException as e:
+            raise AtSecondaryConnectException(f"Failed to execute {command} - {e}")
 
         if response.is_error():
             if isinstance(response.get_exception(), AtKeyNotFoundException):
@@ -155,14 +158,15 @@ class AtClient(ABC):
         raw_response = None
         try:
             raw_response = self.secondary_connection.execute_command(lookup_command, True)
-        except Exception as e:
+        except AtKeyNotFoundException as e: raise e
+        except AtException as e:
             raise AtSecondaryConnectException(f"Failed to execute {lookup_command} - {e}")
 
         shared_shared_key_decrypted_value = None
         try:
             shared_shared_key_decrypted_value = EncryptionUtil.rsa_decrypt_from_base64(raw_response.get_raw_data_response(), self.keys[KeysUtil.encryption_private_key_name])
         except Exception as e:
-            raise AtDecryptionException("Failed to decrypt the shared_key with our encryption private key") from e
+            raise AtDecryptionException(f"Failed to decrypt the shared_key with our encryption private key - {e}")
 
         self.keys[shared_shared_key_name] =  shared_shared_key_decrypted_value
 
@@ -185,7 +189,7 @@ class AtClient(ABC):
         try:
             cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name])
         except Exception as e:
-            raise AtException(f"Failed to encrypt value with self encryption key - {e}")
+            raise AtEncryptionException(f"Failed to encrypt value with self encryption key - {e}")
         
         command = UpdateVerbBuilder().with_at_key(key, cipher_text).build()
         try:
@@ -238,6 +242,7 @@ class AtClient(ABC):
     def get_lookup_response(self, command: str):
         try:
             response = self.secondary_connection.execute_command(command, True)
+        except (AtKeyNotFoundException, AtInternalServerException) as e: raise e
         except Exception as e:
             raise AtSecondaryConnectException(f"Failed to execute {command} - {e}")
 
@@ -295,7 +300,8 @@ class AtClient(ABC):
         command = "llookup:" + str(shared_key)
         try:
             raw_response = self.secondary_connection.execute_command(command, True)
-        except Exception as e:
+        except (AtKeyNotFoundException, AtInternalServerException) as e: raise e
+        except AtSecondaryConnectException as e:
             raise AtSecondaryConnectException(f"Failed to execute {command} - {e}")
 
         try:

@@ -44,6 +44,9 @@ class AtKey:
         self.namespace = None
         self.metadata = Metadata()
 
+    def __repr__(self):
+        return str(self)
+
     def __str__(self):
         s = ""
         if self.metadata.is_public:

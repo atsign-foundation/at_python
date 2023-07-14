@@ -6,7 +6,7 @@ import traceback
 
 from ..util.socketutil import SocketUtil
 
-from ..exception.atexception import AtException
+from ..exception.atexception import AtException, AtSecondaryConnectException, AtOutboundConnectionLimitException
 from .response import Response
 
 
@@ -143,7 +143,7 @@ class AtConnection(ABC):
                 return response
             else:
                 return ""
-        except Exception as first:
+        except AtSecondaryConnectException as first:
             if retry_on_exception:
                 print(f"\tCaught exception {str(first)}: reconnecting")
                 try:
@@ -152,7 +152,7 @@ class AtConnection(ABC):
                 except Exception as second:
                     import traceback
                     traceback.print_exc()
-                    raise AtException(f"Failed to reconnect after original exception {str(first)}: ", second)
+                    raise AtOutboundConnectionLimitException(f"Failed to reconnect after original exception {str(first)}: ", second)
             else:
                 self._connected = False
-                raise AtException(str(first))
+                raise AtSecondaryConnectException(str(first))

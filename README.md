@@ -109,6 +109,40 @@ There are 3 ways in which data can be sent and received from at server.
 		2) Select option `2`. REPL will start and activate monitor mode automatically in a different thread. You can still send commands/verbs. You will start seeing your own notifications (from yourself to yourself) and heartbeat working (noop verb is sent from time to time as a keepalive)
 		3) Use `at_talk` or any other tool to send notifications to your atSign from a different atSign. You should be able to see the complete notification, and the encrypted and decrypted value of it.
 
+* **REGISTER** - use this cli to register new free atsign. Uses onboarding cli to create atkey files.
+	* Use following command to run the REGISTER cli using email:
+		```shell
+        python register.py -e <email>
+        ```
+    * Use following command to run the REGISTER cli using api-key:
+		```shell
+        python register.py -k <api-key>
+        ```
+
+* **ONBOARDING** - use this cli to onboard a new atSign. Once onboarding is complete it creates the all-important keys file. Onboard is a subset of Register.
+	* Use following command to run the ONBOARDING cli:
+		```shell
+        python onboarding.py -a <atsign> -c <cram-secret>
+        ```
+
+* **SHARE** - use this cli to share data between 2 atsigns.
+	* Use following command to run the SHARE cli:
+		```shell
+        python share.py -a <atsign> -o <other-atsign> -k <key-name> -s <value>
+        ```
+
+* **GET** - use this cli to get shared data between 2 atsigns.
+	* Use following command to run the GET cli:
+		```shell
+        python get.py -a <atsign> -o <other-atsign> -k <key-name>
+        ```
+
+* **DELETE** - use this cli to delete any key shared between 2 atsigns.
+	* Use following command to run the DELETE cli:
+		```shell
+        python delete.py -a <atsign> -o <other-atsign> -k <key-name>
+        ```
+
 ## Open source usage and contributions
 
 This is open source code, so feel free to use it as is, suggest changes or
