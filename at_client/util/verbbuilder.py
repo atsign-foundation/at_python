@@ -2,6 +2,7 @@ import base64
 import binascii
 from enum import Enum
 from abc import ABC, abstractmethod
+import uuid
 from ..common.atsign import AtSign
 from ..common.metadata import Metadata
 
@@ -556,7 +557,7 @@ class NotifyVerbBuilder(VerbBuilder):
     def build(self):
         if self.key is None or (self.shared_with is None and not self.is_public):
             raise ValueError("key is None or, you have a public key with no shared_with. These are required fields")
-        s = f"notify:id:{self.key}:"
+        s = f"notify:id:{uuid.uuid4()}:"
         if self.operation is not None:
             s+= f"{self.operation.getOperationName()}"
         if self.metadata:

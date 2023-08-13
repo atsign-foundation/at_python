@@ -1,3 +1,4 @@
+import re
 import unittest
 from at_client.util.verbbuilder import *
 from at_client.common import AtSign
@@ -327,6 +328,36 @@ class AtVerbBuilderTest(unittest.TestCase):
         self.assertEqual("delete:@bob:test@alice", command)
 
 
-
+    def test_notify_verb_builder(self):
+        # with a shared key, no metadata and no namespace
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        command = NotifyVerbBuilder().with_at_key(sk).build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertRegex("notify:ttr:-1:@bob:test@alice", command_without_id)
+        
+        #with a shared key, metadata and no namespace
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        metadata = Metadata(ttl="1000", ttr="-1")
+        sk.metadata = metadata
+        command = NotifyVerbBuilder().with_at_key(sk).build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertRegex("notify:ttl:1000ttr:-1:@bob:test@alice", command_without_id)
+        
+        #with a shared key, no metadata and namespace
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        sk.namespace = "dave"
+        command = NotifyVerbBuilder().with_at_key(sk).build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertRegex("notify:ttr:-1:@bob:test.dave@alice", command_without_id)
+        
+        #with a shared key, metadata and namespace
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        metadata = Metadata(ttl="1000", ttr="-1")
+        sk.metadata = metadata
+        sk.namespace = "dave"
+        command = NotifyVerbBuilder().with_at_key(sk).build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertRegex("notify:ttl:1000:ttr:-1:@bob:test.dave@alice", command_without_id)
+        
 if __name__ == '__main__':
     unittest.main()
