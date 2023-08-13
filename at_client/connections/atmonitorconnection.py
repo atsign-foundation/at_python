@@ -22,7 +22,7 @@ class AtMonitorConnection(AtSecondaryConnection):
     def __init__(self, queue:queue.Queue, atsign:AtSign, address: Address, context:ssl.SSLContext=ssl.create_default_context(), verbose:bool=True):
         self.atsign = atsign
         self.queue = queue
-        self._verbose = True
+        self._verbose = verbose
         super().__init__(address, context, verbose)
         self._last_heartbeat_sent_time = TimeUtil.current_time_millis()
         self._last_heartbeat_ack_time = TimeUtil.current_time_millis()
@@ -120,7 +120,7 @@ class AtMonitorConnection(AtSecondaryConnection):
             monitor_cmd = "monitor:" + str(self.last_received_time) + " " + regex
             what = "send monitor command " + monitor_cmd
             self.execute_command(command=monitor_cmd, retry_on_exception=True, read_the_response=False)
-            
+            print("Montior started on " + str(self.atsign.to_string()))
             entered = False
             should_be_running_lock.acquire(blocking=1)
             while self.should_be_running:
