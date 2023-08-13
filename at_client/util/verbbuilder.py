@@ -538,7 +538,7 @@ class NotifyVerbBuilder(VerbBuilder):
         self.namespace = namespace
         return self
 
-    def with_at_key(self, at_key, encrypted_value, operation):
+    def with_at_key(self, at_key, encrypted_value, operation=None):
         self.set_key_name(at_key.name)
         self.set_shared_by(str(at_key.shared_by))
         self.set_shared_with(str(at_key.shared_with))
