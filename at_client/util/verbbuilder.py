@@ -70,7 +70,7 @@ class ScanVerbBuilder(VerbBuilder):
         if self.show_hidden:
             command += ":showHidden:true"
 
-        if self.from_at_sign is not None and self.from_at_sign.strip() != "":
+        if self.from_at_sign and self.from_at_sign.strip() != "":
             command += ":" + self.from_at_sign
 
         if self.regex is not None and self.regex.strip() != "":
@@ -538,7 +538,7 @@ class NotifyVerbBuilder(VerbBuilder):
         self.namespace = namespace
         return self
 
-    def with_at_key(self, at_key, encrypted_value, operation=None):
+    def with_at_key(self, at_key, encrypted_value, operation=OperationEnum.UPDATE):
         self.set_key_name(at_key.name)
         self.set_shared_by(str(at_key.shared_by))
         self.set_shared_with(str(at_key.shared_with))
@@ -548,7 +548,7 @@ class NotifyVerbBuilder(VerbBuilder):
         self.set_metadata(at_key.metadata)
         self.set_value(encrypted_value)
         self.set_namespace(at_key.namespace)
-        self.operation = OperationEnum(operation)
+        self.operation = operation
         if self.message_type is None:
             self.message_type = MessageTypeEnum.KEY
         return self
@@ -558,16 +558,15 @@ class NotifyVerbBuilder(VerbBuilder):
         if self.key is None or (self.shared_with is None and not self.is_public):
             raise ValueError("key is None or, you have a public key with no shared_with. These are required fields")
         s = f"notify:id:{uuid.uuid4()}:"
-        if self.operation is not None:
+        if self.operation:
             s+= f"{self.operation.getOperationName()}"
         if self.metadata:
             s+= str(self.metadata) + ":"
-        else:
-            s+= "ttr:-1:"
-        if self.shared_with is not None:
+        if self.shared_with:
             s += AtSign.format_atsign(self.shared_with) + ":"
         s += self.key
-        s+= self.namespace
-        s += AtSign.format_atsign(self.shared_by) + ":"
+        if self.namespace:
+            s+= self.namespace
+        s += str(AtSign.format_atsign(self.shared_by)) + ":"
         s += self.value
         return s

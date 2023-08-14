@@ -333,7 +333,8 @@ class AtVerbBuilderTest(unittest.TestCase):
         sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        self.assertRegex("notify:ttr:-1:@bob:test@alice:valuevaluevalue", command_without_id)
+        print(command_without_id)
+        self.assertRegex(command_without_id, "notify:update:isEncrypted:true:@bob:test@alice:valuevaluevalue")
         
         #with a shared key, metadata and no namespace
         sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
@@ -341,23 +342,23 @@ class AtVerbBuilderTest(unittest.TestCase):
         sk.metadata = metadata
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        self.assertRegex("notify:ttl:1000ttr:-1:@bob:test@alice:valuevaluevalue", command_without_id)
+        self.assertRegex(command_without_id, "notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test@alice:valuevaluevalue")
         
         #with a shared key, no metadata and namespace
         sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
-        sk.namespace = "dave"
+        sk.namespace = ".dave"
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        self.assertRegex("notify:ttr:-1:@bob:test.dave@alice:valuevaluevalue", command_without_id)
+        self.assertRegex(command_without_id, "notify:update:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
         
         #with a shared key, metadata and namespace
         sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
         metadata = Metadata(ttl="1000", ttr="-1")
         sk.metadata = metadata
-        sk.namespace = "dave"
+        sk.namespace = ".dave"
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        self.assertRegex("notify:ttl:1000:ttr:-1:@bob:test.dave@alice:valuevaluevalue", command_without_id)
+        self.assertRegex(command_without_id, "notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
         
 if __name__ == '__main__':
     unittest.main()
