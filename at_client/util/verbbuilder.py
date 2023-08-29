@@ -556,7 +556,7 @@ class NotifyVerbBuilder(VerbBuilder):
             raise ValueError("key is None or, you have a public key with no shared_with. These are required fields")
         s = f"notify:id:{uuid.uuid4()}:"
         if self.operation:
-            s+= f"{str(self.operation)}"
+            s+= f"{str(self.operation.value)}"
         if self.metadata:
             s+= str(self.metadata) + ":"
         if self.shared_with:
