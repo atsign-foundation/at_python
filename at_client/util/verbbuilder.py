@@ -471,7 +471,7 @@ class OperationEnum(Enum):
     #APPEND = "append"
 
     def getOperationName(self):
-        return self.value.split(".")[-1]
+        return self.value
 
 class MessageTypeEnum(Enum):
     TEXT = "MessageType.text"
@@ -559,7 +559,7 @@ class NotifyVerbBuilder(VerbBuilder):
             raise ValueError("key is None or, you have a public key with no shared_with. These are required fields")
         s = f"notify:id:{uuid.uuid4()}:"
         if self.operation:
-            s+= f"{self.operation.getOperationName()}"
+            s+= f"{self.operation}"
         if self.metadata:
             s+= str(self.metadata) + ":"
         if self.shared_with:
