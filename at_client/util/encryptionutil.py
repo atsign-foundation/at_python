@@ -1,5 +1,8 @@
 import base64
+import binascii
 import os
+import random
+import secrets
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.primitives import padding, serialization
 from cryptography.hazmat.backends import default_backend
@@ -87,3 +90,8 @@ class EncryptionUtil:
     def public_key_from_base64(s):
         key_bytes = base64.b64decode(s.encode('utf-8'))
         return load_der_public_key(key_bytes)
+    
+    @staticmethod
+    def generate_iv_nonce():
+        return secrets.token_bytes(16)
+        

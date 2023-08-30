@@ -1,5 +1,8 @@
+import base64
+import binascii
 from enum import Enum
 from abc import ABC, abstractmethod
+import uuid
 from ..common.atsign import AtSign
 from ..common.metadata import Metadata
 
@@ -67,7 +70,7 @@ class ScanVerbBuilder(VerbBuilder):
         if self.show_hidden:
             command += ":showHidden:true"
 
-        if self.from_at_sign is not None and self.from_at_sign.strip() != "":
+        if self.from_at_sign and self.from_at_sign.strip() != "":
             command += ":" + self.from_at_sign
 
         if self.regex is not None and self.regex.strip() != "":
@@ -460,3 +463,107 @@ class DeleteVerbBuilder:
         s += self.key
         s += AtSign.format_atsign(self.shared_by)
         return s 
+    
+class OperationEnum(Enum):
+    UPDATE = "update"
+    DELETE = "delete"
+    REMOVE = "remove"
+    #APPEND = "append"
+    
+class MessageTypeEnum(Enum):
+    TEXT = "MessageType.text"
+    KEY = "MessageType.key"
+    
+    def getMessageType(self):
+        return self.value.split(".")[-1]
+    
+class NotifyVerbBuilder(VerbBuilder):
+    def __init__(self):
+        self.key = None
+        self.shared_by = None
+        self.shared_with = ""
+        self.namespace = None
+        self.is_hidden = False
+        self.is_public = False
+        self.is_cached = False
+        self.value = None
+        self.operation = None
+        self.message_type = None
+        self.metadata = None
+
+    def set_value(self, value):
+        self.value = value
+        return self
+
+    def set_key_name(self, name):
+        self.key = name
+        return self
+
+    def set_shared_by(self, shared_by):
+        self.shared_by = shared_by
+        return self
+
+    def set_shared_with(self, shared_with):
+        self.shared_with = shared_with
+        return self
+
+    def set_is_hidden(self, is_hidden):
+        self.is_hidden = is_hidden
+        return self
+
+    def set_is_public(self, is_public):
+        self.is_public = is_public
+        return self
+
+    def set_is_cached(self, is_cached):
+        self.is_cached = is_cached
+        return self
+    
+    def set_operation(self, operation):
+        self.operation = OperationEnum(operation)
+        return self
+        
+    def set_metadata(self, metadata):
+        self.metadata = metadata
+        return self
+        
+    def set_message_type(self, message_type):
+        self.message_type = MessageTypeEnum(message_type)
+        return self
+    
+    def set_namespace(self, namespace):
+        self.namespace = namespace
+        return self
+
+    def with_at_key(self, at_key, encrypted_value, operation=OperationEnum.UPDATE):
+        self.set_key_name(at_key.name)
+        self.set_shared_by(str(at_key.shared_by))
+        self.set_shared_with(str(at_key.shared_with))
+        self.set_is_hidden(at_key.metadata.is_hidden)
+        self.set_is_public(at_key.metadata.is_public)
+        self.set_is_cached(at_key.metadata.is_cached)
+        self.set_metadata(at_key.metadata)
+        self.set_value(encrypted_value)
+        self.set_namespace(at_key.namespace)
+        self.operation = operation
+        if self.message_type is None:
+            self.message_type = MessageTypeEnum.KEY
+        return self
+        
+
+    def build(self):
+        if self.key is None or (self.shared_with is None and not self.is_public):
+            raise ValueError("key is None or, you have a public key with no shared_with. These are required fields")
+        s = f"notify:id:{uuid.uuid4()}:"
+        if self.operation:
+            s+= f"{str(self.operation.value)}"
+        if self.metadata:
+            s+= str(self.metadata) + ":"
+        if self.shared_with:
+            s += AtSign.format_atsign(self.shared_with) + ":"
+        s += self.key
+        if self.namespace:
+            s+= self.namespace
+        s += str(AtSign.format_atsign(self.shared_by)) + ":"
+        s += self.value
+        return s

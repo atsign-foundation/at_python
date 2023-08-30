@@ -18,7 +18,7 @@ from .connections.atsecondaryconnection import AtSecondaryConnection
 from .connections.atmonitorconnection import AtMonitorConnection
 from .util.atconstants import *
 from .connections.address import Address
-from .common.keys import Keys, SharedKey, PrivateHiddenKey, PublicKey, SelfKey
+from .common.keys import AtKey, Keys, SharedKey, PrivateHiddenKey, PublicKey, SelfKey
 from .util.authutil import AuthUtil
 
 class AtClient(ABC):
@@ -350,7 +350,7 @@ class AtClient(ABC):
             try:
                 if self.monitor_connection == None:
                     what = "construct an AtMonitorConnection"
-                    self.monitor_connection = AtMonitorConnection(queue=self.queue, atsign=self.atsign, address=self.secondary_address, verbose=True)
+                    self.monitor_connection = AtMonitorConnection(queue=self.queue, atsign=self.atsign, address=self.secondary_address, verbose=self.verbose)
                     self.monitor_connection.connect()
                     AuthUtil.authenticate_with_pkam(self.monitor_connection, self.atsign, self.keys)
                 should_be_running_lock.acquire(blocking=1)
@@ -419,6 +419,14 @@ class AtClient(ABC):
                 pass
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
+        
+    def notify(self, at_key : AtKey, value):
+        iv = at_key.metadata.iv_nonce
+        shared_key = self.get_encryption_key_shared_by_me(at_key)
+        encrypted_value = EncryptionUtil.aes_encrypt_from_base64(value, shared_key, iv)
+        command = NotifyVerbBuilder().with_at_key(at_key, encrypted_value, "update").build()
+        notify_result = self.secondary_connection.execute_command(command)
+        return notify_result.get_raw_data_response()
         
     
     

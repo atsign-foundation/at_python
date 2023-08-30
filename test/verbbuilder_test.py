@@ -1,3 +1,4 @@
+import re
 import unittest
 from at_client.util.verbbuilder import *
 from at_client.common import AtSign
@@ -327,6 +328,37 @@ class AtVerbBuilderTest(unittest.TestCase):
         self.assertEqual("delete:@bob:test@alice", command)
 
 
-
+    def test_notify_verb_builder(self):
+        # with a shared key, no metadata and no namespace
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        print(command_without_id)
+        self.assertRegex(command_without_id, "notify:update:isEncrypted:true:@bob:test@alice:valuevaluevalue")
+        
+        #with a shared key, metadata and no namespace
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        metadata = Metadata(ttl="1000", ttr="-1")
+        sk.metadata = metadata
+        command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertRegex(command_without_id, "notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test@alice:valuevaluevalue")
+        
+        #with a shared key, no metadata and namespace
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        sk.namespace = ".dave"
+        command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertRegex(command_without_id, "notify:update:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
+        
+        #with a shared key, metadata and namespace
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        metadata = Metadata(ttl="1000", ttr="-1")
+        sk.metadata = metadata
+        sk.namespace = ".dave"
+        command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertRegex(command_without_id, "notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
+        
 if __name__ == '__main__':
     unittest.main()
