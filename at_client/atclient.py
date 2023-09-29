@@ -420,11 +420,11 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-    def notify(self, at_key : AtKey, value):
+    def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE):
         iv = at_key.metadata.iv_nonce
         shared_key = self.get_encryption_key_shared_by_me(at_key)
         encrypted_value = EncryptionUtil.aes_encrypt_from_base64(value, shared_key, iv)
-        command = NotifyVerbBuilder().with_at_key(at_key, encrypted_value, "update").build()
+        command = NotifyVerbBuilder().with_at_key(at_key, encrypted_value, operation).build()
         notify_result = self.secondary_connection.execute_command(command)
         return notify_result.get_raw_data_response()
         
