@@ -17,6 +17,7 @@ jobs:
     # Don't run on PRs from a fork as the secrets aren't available
     if: ${{ github.event.pull_request.head.repo.fork == false }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     strategy:
       max-parallel: 1
       fail-fast: false
