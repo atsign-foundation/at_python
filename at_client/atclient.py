@@ -188,7 +188,7 @@ class AtClient(ABC):
 
         try:
             if key.metadata.iv_nonce is None:
-                key.metadata.iv_nonce = base64.b64encode(EncryptionUtil.generate_iv_nonce()).decode('utf-8')
+                key.metadata.iv_nonce = base64.b64encode(EncryptionUtil.generate_iv_nonce()).rstrip().decode('utf-8')
                 
             cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name], base64.b64decode(key.metadata.iv_nonce))
         except Exception as e:
@@ -218,7 +218,7 @@ class AtClient(ABC):
         cipher_text = None
         try:
             if key.metadata.iv_nonce is None:
-                key.metadata.iv_nonce = base64.b64encode(EncryptionUtil.generate_iv_nonce()).decode('utf-8')
+                key.metadata.iv_nonce = base64.b64encode(EncryptionUtil.generate_iv_nonce()).rstrip().decode('utf-8')
                 
             what = "fetch/create shared encryption key"
             share_to_encryption_key = self.get_encryption_key_shared_by_me(key)
