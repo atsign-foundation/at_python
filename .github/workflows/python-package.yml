@@ -33,7 +33,7 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
       run: |
-        python3 -m pip install --require-hashes -r requirements.txt
+        python3 -m pip install --require-hashes -r requirements.dev
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
