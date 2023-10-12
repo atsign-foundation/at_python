@@ -209,17 +209,17 @@ class AtClientTest(unittest.TestCase):
         shared_by = AtSign(self.atsign1)
         shared_with = AtSign(self.atsign2)
         atclient = AtClient(shared_by, verbose=self.verbose)
-        iv = IVNonce().as_b64()
-        sk = SharedKey("test_shared_key1445", shared_by, shared_with).set_iv_nonce(iv)
+        sk = SharedKey("test_shared_key1445", shared_by, shared_with).set_iv_nonce(IVNonce().as_b64())
         atclient.put(sk, "test")
         response = atclient.get(sk)
         self.assertEqual("test", response)
 
         # Shared by other with me
         iv = IVNonce().as_b64()
-        sk = SharedKey("test_shared_key2", shared_with, shared_by)
-        atclient.put(SharedKey("test_shared_key2", shared_by, shared_with).set_iv_nonce(iv), "test2")
-        response = atclient.get(sk)
+        sk1 = SharedKey("test_shared_key2", shared_with, shared_by).set_iv_nonce(iv)
+        sk2 = SharedKey("test_shared_key2", shared_by, shared_with).set_iv_nonce(iv)
+        atclient.put(sk2, "test2")
+        response = atclient.get(sk1)
         self.assertEqual("test2", response)
 
         # Shared Key not found test
