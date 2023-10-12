@@ -75,9 +75,10 @@ class AtClientTest(unittest.TestCase):
         response = atclient.put(sk, "test1")
         self.assertIsNotNone(response)
 
+        iv = IVNonce().as_b64()
         shared_with = AtSign(self.atsign1)
         shared_by = AtSign(self.atsign2)
-        atclient = AtClient(shared_by, verbose=self.verbose)
+        atclient = AtClient(shared_by, verbose=self.verbose).set_iv_nonce(iv)
         sk = SharedKey("test_shared_key2", shared_by, shared_with)
         response = atclient.put(sk, "test2")
         self.assertIsNotNone(response)
@@ -246,7 +247,7 @@ class AtClientTest(unittest.TestCase):
         atsign = AtSign(self.atsign1)
         atclient = AtClient(atsign, verbose=self.verbose)
         random_key_name  = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-        sk = SelfKey(random_key_name, atsign)
+        sk = SelfKey(random_key_name, atsign).set_iv_nonce(IVNonce().as_b64())
         response = atclient.put(sk, "test1")
 
         response = atclient.delete(sk)
@@ -259,7 +260,7 @@ class AtClientTest(unittest.TestCase):
         shared_with = AtSign(self.atsign2)
         atclient = AtClient(shared_by, verbose=self.verbose)
         random_key_name  = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-        sk = SharedKey(random_key_name, shared_by, shared_with)
+        sk = SharedKey(random_key_name, shared_by, shared_with).set_iv_nonce(IVNonce().as_b64())
         response = atclient.put(sk, "test1")
 
         response = atclient.delete(sk)
