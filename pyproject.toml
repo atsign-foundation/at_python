@@ -18,7 +18,7 @@ requests = "2.31.0"
 six = "1.16.0"
 
 [tool.poetry.group.dev.dependencies]
-pip ="23.2.1"
+pip ="23.3"
 flake8 = "6.1.0"
 pytest = "7.4.2"
 
