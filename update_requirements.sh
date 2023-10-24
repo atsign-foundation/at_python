@@ -3,7 +3,7 @@
 # update the requirements.txt, which is what we actually use to pull
 # in our Python dependencies. So we need to run this to generate a
 # new requirements.txt from the updated files.
-if ! [ -f poetry.lock ]; then
+if [ -f poetry.lock ]; then
   rm poetry.lock
 fi
 poetry export --format requirements.txt --output requirements.txt
