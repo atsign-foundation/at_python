@@ -14,7 +14,7 @@ package_data = \
 
 install_requires = \
 ['cffi==1.16.0',
- 'cryptography==41.0.4',
+ 'cryptography==41.0.5',
  'pycparser==2.21',
  'python-dateutil==2.8.2',
  'requests==2.31.0',
