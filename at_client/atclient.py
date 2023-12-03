@@ -25,7 +25,8 @@ class AtClient(ABC):
     def __init__(self, atsign:AtSign, root_address:Address=Address("root.atsign.org", 64), secondary_address:Address=None, queue:Queue=None, verbose:bool = False):
         self.atsign = atsign
         self.queue = queue
-        self.decrypted_events = Queue(queue.maxsize)
+        if queue != None:
+            self.decrypted_events = Queue(queue.maxsize)
         self.monitor_connection = None
         self.keys = KeysUtil.load_keys(atsign)
         self.verbose = verbose
