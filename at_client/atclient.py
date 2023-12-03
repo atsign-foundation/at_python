@@ -25,6 +25,7 @@ class AtClient(ABC):
     def __init__(self, atsign:AtSign, root_address:Address=Address("root.atsign.org", 64), secondary_address:Address=None, queue:Queue=None, verbose:bool = False):
         self.atsign = atsign
         self.queue = queue
+        self.decrypted_events = Queue(queue.maxsize)
         self.monitor_connection = None
         self.keys = KeysUtil.load_keys(atsign)
         self.verbose = verbose
@@ -342,8 +343,16 @@ class AtClient(ABC):
     def __del__(self):
         if self.secondary_connection:
             self.secondary_connection.disconnect()
+            
+    def start_monitor(self, regex="", decrypt_events=True):
+        threading.Thread(target=self._start_monitor, args=(regex,)).start()
+        while self.monitor_connection == None:
+            time.sleep(0.1)
+        if decrypt_events:
+            threading.Thread(target=self.decrypt_events).start()
+        
 
-    def start_monitor(self, regex=""):
+    def _start_monitor(self, regex=""):
         if self.queue != None:
             global should_be_running_lock
             what = ""
@@ -366,7 +375,7 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-    def stop_monitor(self):
+    def _stop_monitor(self):
         if self.queue != None:
             global should_be_running_lock
             what = ""
@@ -386,7 +395,8 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
 
-    def handle_event(self, queue, at_event):
+    #I want to make this private. Not sure if we should abstract this, along with the above 2, out to a separate class 
+    def _handle_event(self, queue, at_event):
         if self.queue != None:
             try:
                 event_type = at_event.event_type
@@ -406,13 +416,16 @@ class AtClient(ABC):
                         key = event_data["key"]
                         encrypted_value = event_data["value"]
                         ivNonce = event_data["metadata"]["ivNonce"]
+                        self.secondary_connection.execute_command("notify:remove:" + event_data["id"])
                         try:
                             encryption_key_shared_by_other = self.get_encryption_key_shared_by_other(SharedKey.from_string(key=key))
                             decrypted_value = EncryptionUtil.aes_decrypt_from_base64(encrypted_text=encrypted_value.encode(), self_encryption_key=encryption_key_shared_by_other, iv=base64.b64decode(ivNonce))
                             new_event_data = dict(event_data)
                             new_event_data["decryptedValue"] = decrypted_value
                             new_at_event = AtEvent(AtEventType.DECRYPTED_UPDATE_NOTIFICATION, new_event_data)
-                            queue.put(new_at_event)
+                            #For now,the decrypted event is going into both queues, since older code may be listening to the queue directly?
+                            self.decrypted_events.put(new_at_event)
+                            #self.queue.put(new_at_event)
                         except Exception as e:
                             print(str(time.time()) + ": caught exception " + str(e) + " while decrypting received data with key name [" + key + "]")
             except Empty:
@@ -420,6 +433,33 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
+
+    #Up to suggestions on this 
+    #I don't want to leave this as a while True, but I'm not sure how else to tackle it...
+    def decrypt_events(self):   
+        while True:
+            try:
+                at_event = self.queue.get(block=False)
+                event_type = at_event.event_type    
+                if event_type == AtEventType.UPDATE_NOTIFICATION or event_type == AtEventType.UPDATE_NOTIFICATION_TEXT:
+                    self._handle_event(self.queue, at_event)
+                timeout = 0
+            except Empty:
+                pass
+                
+        
+    #Handling events using a generator.
+    def get_decrypted_events(self):
+        if self.decrypted_events != None:
+            while True:
+                try:
+                    at_event = self.decrypted_events.get(block=False)
+                    yield at_event
+                except Empty:
+                    break
+        else:
+            raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
+          
     def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE, session_id = str(uuid.uuid4())):
         iv = at_key.metadata.iv_nonce
         shared_key = self.get_encryption_key_shared_by_me(at_key)
