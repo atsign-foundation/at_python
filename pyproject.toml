@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "atsdk"
-version = "0.0.3"
+version = "0.0.4"
 description = "Python SDK for atPlatform"
-authors = ["Umang Shah <shahumang19@gmail.com>","Chris Swan <@cpswan>"]
-maintainers = ["Chris Swan <@cpswan>"]
+authors = ["Umang Shah <shahumang19@gmail.com>","Chris Swan <chris@atsign.com>"]
+maintainers = ["Chris Swan <chris@atsign.com>"]
 readme = "README.md"
 packages = [{include = "at_client"}]
 homepage = "https://github.com/atsign-foundation/at_python"
