@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "at_python"
-version = "0.0.2"
+name = "atsdk"
+version = "0.0.3"
 description = "Python SDK for atPlatform"
 authors = ["Umang Shah <shahumang19@gmail.com>","Chris Swan <@cpswan>"]
 maintainers = ["Chris Swan <@cpswan>"]
