@@ -3,7 +3,7 @@
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/atsign-foundation/at_python/badge)](https://api.securityscorecards.dev/projects/github.com/atsign-foundation/at_python)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8104/badge)](https://www.bestpractices.dev/projects/8104)
 
-# The atPlatform for Python developers - (Alpha Version)
+# The atPlatform for Python developers - (Beta Version)
 
 This repo contains library, samples and examples for developers who wish
 to work with the atPlatform from Python code.
