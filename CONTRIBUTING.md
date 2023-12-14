@@ -1,4 +1,4 @@
-<img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true">
+<h1><img width=250px src="https://atsign.dev/assets/img/atPlatform_logo_gray.svg?sanitize=true"></h1>
 
 # Contributing guidelines
 
@@ -8,38 +8,38 @@ for fixing issues or adding features. Thanks for your contribution!
 Please read our [code of conduct](code_of_conduct.md), which is based on
 [![Contributor Covenant](https://img.shields.io/badge/Contributor%20Covenant-2.0-4baaaa.svg)](code_of_conduct.md)
 
-
 For small changes, especially documentation, you can simply use the "Edit" button
 to update the Markdown file, and start the
 [pull request](https://help.github.com/articles/about-pull-requests/) process.
 Use the preview tab in GitHub to make sure that it is properly
-formatted before committing. Please use conventional commits and follow the semantic PR format as documented 
-[here](https://github.com/atsign-foundation/.github/blob/trunk/atGitHub.md#semantic-prs).
-A pull request will cause integration tests to run automatically, so please review
-the results of the pipeline and correct any mistakes that are reported.
+formatted before committing. Please use conventional commits and follow the
+semantic PR format as documented
+[here](https://github.com/atsign-foundation/.github/blob/trunk/atGitHub.md#semantic-prs)
+. A pull request will cause integration tests to run automatically, so please
+review the results of the pipeline and correct any mistakes that are reported.
 
 If you plan to contribute often or have a larger change to make, it is best to
-setup an environment for contribution, which is what the rest of these guidelines
-describe. The atsign-foundation GitHub organization's conventions and configurations are documented
+setup an environment for contribution, which is what the rest of these
+guidelines describe. The atsign-foundation GitHub organization's conventions
+and configurations are documented
 [here](https://github.com/atsign-foundation/.github/blob/trunk/atGitHub.md).
 
 ## Development Environment Setup
 
-
 ### Prerequisites
 
-1. Download latest python from https://www.python.org/downloads/
+1. Download latest python from <https://www.python.org/downloads/>
 2. Install required libraries using below command.
-   ```
+
+   ```sh
    pip install -r requirements.txt
    ```
-
 
 ### GitHub Repository Clone
 
 To prepare your dedicated GitHub repository:
 
-1. Fork in GitHub https://github.com/atsign-foundation/at_python
+1. Fork in GitHub <https://github.com/atsign-foundation/at_python>
 2. Clone *your forked repository* (e.g., `git clone git@github.com:yourname/at_python`)
 3. Set your remotes as follows:
 
@@ -61,7 +61,7 @@ To prepare your dedicated GitHub repository:
    The use of `upstream --push DISABLED` is to prevent those
    with `write` access to the main repository from accidentally pushing changes
    directly.
-   
+
 ### Development Process
 
 1. Fetch latest changes from main repository:
@@ -89,15 +89,18 @@ To prepare your dedicated GitHub repository:
    git push
    ```
 
-1. How to run tests:<br/>
-   Create `config.ini` file and add your atsigns to run testcases. The structure of the files is as follows:
+1. How to run tests:  
+   Create `config.ini` file and add your atsigns to run testcases. The
+   structure of the files is as follows:
 
-   ```
+   ```sh
    [test_atsigns]
    atsign1 = <YOUR-ATSIGN1>
    atsign2 = <YOUR-ATSIGN2>
    ```
+
    Run all testcases using this command.
+
    ``` sh
    python -m unittest discover -s test -p '*_test.py' -v
    ```
@@ -139,11 +142,11 @@ release to pub.dev
 
 * Where possible the issue associated with the bug should be closed by mutual
 consent with the reporter. This could be:
-    * The reporter closing the issue because they have found a workaround.
-    * The reporter closing the issue because they are satisfied with a fix
-    provided.
-    * A team member closes the issue after the reporter leaves a comment
-    indicating that they are happy for it to be closed.
+  * The reporter closing the issue because they have found a workaround.
+  * The reporter closing the issue because they are satisfied with a fix
+  provided.
+  * A team member closes the issue after the reporter leaves a comment
+  indicating that they are happy for it to be closed.
 * If the reporter does not respond within 14 calendar days then we must assume
 that they no longer have an interest in fixing the bug and work in progress can
 be closed out at the team’s discretion.
