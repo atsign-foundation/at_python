@@ -61,6 +61,7 @@ jobs:
     - name: Publish distribution to TestPyPI
       uses: pypa/gh-action-pypi-publish@2f6f737ca5f74c637829c0f5c3acd0e29ea5e8bf # v1.8.11
       with:
+        skip-existing: true
         repository-url: https://test.pypi.org/legacy/
 
   publish-to-pypi:
