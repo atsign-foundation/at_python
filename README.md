@@ -12,6 +12,14 @@ to work with the atPlatform from Python code.
 
 ### 1. Installation
 
+This package can be installed from PyPI with:
+
+```sh
+pip install atsdk
+```
+
+Alternatively clone this repo and from the repo root:
+
 ```shell
 pip install -r requirements.txt
 pip install .
