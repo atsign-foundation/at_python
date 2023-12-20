@@ -109,6 +109,8 @@ class Metadata:
         s = ""
         if self.ttl:
             s += f":ttl:{self.ttl}"
+        if self.ttnl:
+            s += f":ttln:{self.ttln}"
         if self.ttb:
             s += f":ttb:{self.ttb}"
         if self.ttr:
