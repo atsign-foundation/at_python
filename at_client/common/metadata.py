@@ -8,6 +8,7 @@ from dataclasses import dataclass
 @dataclass
 class Metadata:
     ttl: int = 0
+    ttln: int = 0
     ttb: int = 0
     ttr: int = 0
     ccd: bool = False
@@ -43,6 +44,7 @@ class Metadata:
         data = json.loads(json_str)
         metadata = Metadata()
         metadata.ttl = data.get('ttl')
+        metadata.ttl = data.get('ttln')
         metadata.ttb = data.get('ttb')
         metadata.ttr = data.get('ttr')
         metadata.ccd = data.get('ccd')
@@ -74,6 +76,7 @@ class Metadata:
     def from_dict(data_dict):
         metadata = Metadata()
         metadata.ttl = data_dict.get('ttl', 0)
+        metadata.ttln = data_dict.get('ttln', 0)
         metadata.ttb = data_dict.get('ttb', 0)
         metadata.ttr = data_dict.get('ttr', 0)
         metadata.ccd = data_dict.get('ccd', False)
@@ -106,6 +109,8 @@ class Metadata:
         s = ""
         if self.ttl:
             s += f":ttl:{self.ttl}"
+        if self.ttln:
+            s += f":ttln:{self.ttln}"
         if self.ttb:
             s += f":ttb:{self.ttb}"
         if self.ttr:
