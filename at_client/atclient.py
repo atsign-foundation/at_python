@@ -1,10 +1,8 @@
-import base64
-import json
+import base64, json, time, traceback, uuid
 from queue import Empty, Queue
-import time
-import traceback
 
 from at_client.connections.notification.atevents import AtEvent, AtEventType
+from at_client.connections.notification.atnotificationservice import AtNotificationService
 
 
 from .common.atsign import AtSign
@@ -25,8 +23,6 @@ class AtClient(ABC):
     def __init__(self, atsign:AtSign, root_address:Address=Address("root.atsign.org", 64), secondary_address:Address=None, queue:Queue=None, verbose:bool = False):
         self.atsign = atsign
         self.queue = queue
-        if queue != None:
-            self.decrypted_events = Queue(queue.maxsize)
         self.monitor_connection = None
         self.keys = KeysUtil.load_keys(atsign)
         self.verbose = verbose
@@ -40,6 +36,9 @@ class AtClient(ABC):
         self.secondary_connection.connect()
         AuthUtil.authenticate_with_pkam(self.secondary_connection, self.atsign, self.keys)
         self.authenticated = True
+        if queue != None:
+            self.notification_service = AtNotificationService(self, verbose=verbose)
+    
     
     def get_at_keys(self, regex, fetch_metadata):
         scan_command = ScanVerbBuilder().set_regex(regex).set_show_hidden(True).build()
@@ -344,16 +343,11 @@ class AtClient(ABC):
     def __del__(self):
         if self.secondary_connection:
             self.secondary_connection.disconnect()
-            
-    def start_monitor(self, regex="", decrypt_events=True):
-        threading.Thread(target=self._start_monitor, args=(regex,)).start()
-        while self.monitor_connection == None:
-            time.sleep(0.1)
-        if decrypt_events:
-            threading.Thread(target=self.decrypt_events, args=(self.queue,)).start()
-        
 
-    def _start_monitor(self, regex=""):
+    def start_monitor(self, regex=""):
+        '''
+        DEPRECATED: use AtNotificationService instead 
+        '''
         if self.queue != None:
             global should_be_running_lock
             what = ""
@@ -376,7 +370,10 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-    def _stop_monitor(self):
+    def stop_monitor(self):
+        '''
+        DEPRECATED: use AtNotificationService instead 
+        '''
         if self.queue != None:
             global should_be_running_lock
             what = ""
@@ -396,8 +393,11 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
 
-    #I want to make this private. Not sure if we should abstract this, along with the above 2, out to a separate class 
-    def _handle_event(self, queue, at_event):
+
+    def handle_event(self, queue, at_event):
+        '''
+        DEPRECATED: use AtNotificationService instead 
+        '''
         if self.queue != None:
             try:
                 event_type = at_event.event_type
@@ -434,23 +434,8 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-
-    #Up to suggestions on this 
-    #I don't want to leave this as a while True, but I'm not sure how else to tackle it...
-    def decrypt_events(self, queue):   
-        while True:
-            try:
-                at_event = queue.get(block=False)
-                event_type = at_event.event_type    
-                if event_type == AtEventType.UPDATE_NOTIFICATION or event_type == AtEventType.UPDATE_NOTIFICATION_TEXT:
-                    self._handle_event(queue, at_event)
-                timeout = 0
-            except Empty:
-                pass
-    
-    def get_decrypted_events(self, queue):
-        return list(queue.queue)
-          
+    #I  want to leave this here instead of the AtNotificationService 
+    # because it's logic is fairly related to the AtClient instead of the NotficationService (despite the name..)  
     def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE, session_id = str(uuid.uuid4())):
         iv = at_key.metadata.iv_nonce
         shared_key = self.get_encryption_key_shared_by_me(at_key)
