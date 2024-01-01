@@ -20,7 +20,7 @@ six = "1.16.0"
 [tool.poetry.group.dev.dependencies]
 pip ="23.3.2"
 flake8 = "6.1.0"
-pytest = "7.4.3"
+pytest = "7.4.4"
 
 [build-system]
 requires = ["poetry-core"]
