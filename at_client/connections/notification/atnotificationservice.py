@@ -99,8 +99,20 @@ class AtNotificationService:
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-
-
+  # This method is meant to be run in a separate thread
+    def _decrypt_events(self, queue):   
+        while True:
+            try:
+                at_event = queue.get(block=False)
+                event_type = at_event.event_type    
+                if event_type == AtEventType.UPDATE_NOTIFICATION or event_type == AtEventType.UPDATE_NOTIFICATION_TEXT:
+                    self._handle_event(queue, at_event)
+                
+            except Empty:
+                pass
+            except Exception as e:
+                print("SEVERE: failed to decrypt event : " + str(e))
+                break
 
     def _handle_event(self, queue, at_event):
         if queue != None:
@@ -136,21 +148,3 @@ class AtNotificationService:
                 pass
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
-        
-    # This method is meant to be run in a separate thread
-    def _decrypt_events(self, queue):   
-        while True:
-            try:
-                at_event = queue.get(block=False)
-                event_type = at_event.event_type    
-                if event_type == AtEventType.UPDATE_NOTIFICATION or event_type == AtEventType.UPDATE_NOTIFICATION_TEXT:
-                    self._handle_event(queue, at_event)
-                
-            except Empty:
-                pass
-            except Exception as e:
-                print("SEVERE: failed to decrypt event : " + str(e))
-                break
-            
-            
-    

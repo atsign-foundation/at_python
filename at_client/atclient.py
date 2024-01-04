@@ -434,8 +434,7 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-    #I  want to leave this here instead of the AtNotificationService 
-    # because it's logic is fairly related to the AtClient instead of the NotficationService (despite the name..)  
+   
     def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE, session_id = str(uuid.uuid4())):
         iv = at_key.metadata.iv_nonce
         shared_key = self.get_encryption_key_shared_by_me(at_key)
