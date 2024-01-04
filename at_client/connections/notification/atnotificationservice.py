@@ -122,7 +122,6 @@ class AtNotificationService:
                         key = event_data["key"]
                         encrypted_value = event_data["value"]
                         ivNonce = event_data["metadata"]["ivNonce"]
-                        self.at_client.secondary_connection.execute_command("notify:remove:" + event_data["id"])
                         try:
                             encryption_key_shared_by_other = self.at_client.get_encryption_key_shared_by_other(SharedKey.from_string(key=key))
                             decrypted_value = EncryptionUtil.aes_decrypt_from_base64(encrypted_text=encrypted_value.encode(), self_encryption_key=encryption_key_shared_by_other, iv=base64.b64decode(ivNonce))
@@ -130,6 +129,7 @@ class AtNotificationService:
                             new_event_data["decryptedValue"] = decrypted_value
                             new_at_event = AtEvent(AtEventType.DECRYPTED_UPDATE_NOTIFICATION, new_event_data)
                             self.decrypted_events.put(new_at_event)
+                            self.at_client.secondary_connection.execute_command("notify:remove:" + event_data["id"])
                         except Exception as e:
                             print(str(time.time()) + ": caught exception " + str(e) + " while decrypting received data with key name [" + key + "]")
             except Empty:
@@ -137,7 +137,7 @@ class AtNotificationService:
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-
+    # This method is meant to be run in a separate thread
     def _decrypt_events(self, queue):   
         while True:
             try:
@@ -148,6 +148,9 @@ class AtNotificationService:
                 
             except Empty:
                 pass
+            except Exception as e:
+                print("SEVERE: failed to decrypt event : " + str(e))
+                break
             
             
     
