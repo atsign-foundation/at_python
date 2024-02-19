@@ -46,6 +46,8 @@ jobs:
           echo 'No changes to commit on this run'
           exit 0
         else
-          git commit -m "build(deps): Bump requirements.txt"
+          poetry version patch
+          git add pyproject.toml
+          git commit -m "build(deps): Bump requirements.txt and poetry version"
           git push
         fi
