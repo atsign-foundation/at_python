@@ -161,3 +161,7 @@ class AtDecryptionException(AtException):
 class AtRegistrarException(AtException):
     def __init__(self, message):
         super().__init__(message)
+
+class AtMissingIVException(AtException):
+    def __init__(self, message):
+        super().__init__(message)

@@ -94,4 +94,3 @@ class EncryptionUtil:
     @staticmethod
     def generate_iv_nonce():
         return secrets.token_bytes(16)
-        

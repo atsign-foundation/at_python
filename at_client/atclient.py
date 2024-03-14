@@ -5,6 +5,7 @@ import time
 import traceback
 
 from at_client.connections.notification.atevents import AtEvent, AtEventType
+from at_client.util.iv_nonce import IVNonce
 
 
 from .common.atsign import AtSign
@@ -187,7 +188,10 @@ class AtClient(ABC):
         key.metadata.data_signature = EncryptionUtil.sign_sha256_rsa(value, self.keys[KeysUtil.encryption_private_key_name])
 
         try:
-            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name])
+            if key.metadata.iv_nonce is None:
+                raise AtMissingIVException("Missing IV for SelfKey")
+                
+            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name], IVNonce.get_bytes_from_b64(key.metadata.iv_nonce))
         except Exception as e:
             raise AtEncryptionException(f"Failed to encrypt value with self encryption key - {e}")
         
@@ -214,11 +218,14 @@ class AtClient(ABC):
         what = ""
         cipher_text = None
         try:
+            if key.metadata.iv_nonce is None:
+                raise AtMissingIVException("Missing IV for SharedKey")
+                
             what = "fetch/create shared encryption key"
             share_to_encryption_key = self.get_encryption_key_shared_by_me(key)
 
             what = "encrypt value with shared encryption key"
-            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, share_to_encryption_key)
+            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, share_to_encryption_key, IVNonce.get_bytes_from_b64(key.metadata.iv_nonce))
         except Exception as e:
             raise AtEncryptionException(f"Failed to {what} - {e}")
 
@@ -264,7 +271,7 @@ class AtClient(ABC):
         encrypted_value = fetched["data"]
         self_encryption_key = self.keys[KeysUtil.self_encryption_key_name]
         try:
-            decrypted_value = EncryptionUtil.aes_decrypt_from_base64(encrypted_value, self_encryption_key)
+            decrypted_value = EncryptionUtil.aes_decrypt_from_base64(encrypted_value, self_encryption_key, base64.b64decode(key.metadata.iv_nonce))
         except Exception as e:
             raise AtDecryptionException(f"Failed to {command} - {e}")
 
@@ -305,7 +312,7 @@ class AtClient(ABC):
             raise AtSecondaryConnectException(f"Failed to execute {command} - {e}")
 
         try:
-            return EncryptionUtil.aes_decrypt_from_base64(raw_response.get_raw_data_response(), share_encryption_key)
+            return EncryptionUtil.aes_decrypt_from_base64(raw_response.get_raw_data_response(), share_encryption_key, IVNonce.get_bytes_from_b64(shared_key.metadata.iv_nonce))
         except Exception as e:
             raise AtDecryptionException(f"Failed to decrypt value with shared encryption key - {e}")
 
@@ -325,7 +332,7 @@ class AtClient(ABC):
 
         what = "decrypt value with shared encryption key"
         try:
-            return EncryptionUtil.aes_decrypt_from_base64(raw_response.get_raw_data_response(), share_encryption_key)
+            return EncryptionUtil.aes_decrypt_from_base64(raw_response.get_raw_data_response(), share_encryption_key, IVNonce.get_bytes_from_b64(shared_key.metadata.iv_nonce))
         except Exception as e:
             raise AtDecryptionException(f"Failed to {what} - {e}")
 

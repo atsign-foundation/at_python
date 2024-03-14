@@ -5,6 +5,7 @@ from at_client import AtClient
 from at_client.common import AtSign
 from at_client.common.keys import PublicKey, SelfKey, SharedKey
 from at_client.exception import *
+from at_client.util.iv_nonce import IVNonce
 from test_wrapper import skip_if_dependabot_pr
 
 class AtClientTest(unittest.TestCase):
@@ -58,7 +59,8 @@ class AtClientTest(unittest.TestCase):
         """Test Put Function with Self Key"""
         atsign = AtSign(self.atsign1)
         atclient = AtClient(atsign, verbose=self.verbose)
-        sk = SelfKey("test_self_key", atsign)
+        iv = IVNonce().as_b64()
+        sk = SelfKey("test_self_key", atsign).set_iv_nonce(iv)
         response = atclient.put(sk, "test1")
         self.assertIsNotNone(response)
 
@@ -68,14 +70,14 @@ class AtClientTest(unittest.TestCase):
         shared_by = AtSign(self.atsign1)
         shared_with = AtSign(self.atsign2)
         atclient = AtClient(shared_by, verbose=self.verbose)
-        sk = SharedKey("test_shared_key", shared_by, shared_with)
+        sk = SharedKey("test_shared_key", shared_by, shared_with).set_iv_nonce(IVNonce().as_b64())
         response = atclient.put(sk, "test1")
         self.assertIsNotNone(response)
 
         shared_with = AtSign(self.atsign1)
         shared_by = AtSign(self.atsign2)
         atclient = AtClient(shared_by, verbose=self.verbose)
-        sk = SharedKey("test_shared_key2", shared_by, shared_with)
+        sk = SharedKey("test_shared_key2", shared_by, shared_with).set_iv_nonce(IVNonce().as_b64())
         response = atclient.put(sk, "test2")
         self.assertIsNotNone(response)
 
@@ -169,7 +171,8 @@ class AtClientTest(unittest.TestCase):
         """Test Get Function with Self Key"""
         atsign = AtSign(self.atsign1)
         atclient = AtClient(atsign, verbose=self.verbose)
-        sk = SelfKey("test_self_key", atsign)
+        iv = IVNonce().as_b64()
+        sk = SelfKey("test_self_key", atsign).set_iv_nonce(iv)
         response = atclient.put(sk, "test1")
         response = atclient.get(sk)
         self.assertEqual("test1", response)
@@ -206,15 +209,17 @@ class AtClientTest(unittest.TestCase):
         shared_by = AtSign(self.atsign1)
         shared_with = AtSign(self.atsign2)
         atclient = AtClient(shared_by, verbose=self.verbose)
-        sk = SharedKey("test_shared_key1445", shared_by, shared_with)
+        sk = SharedKey("test_shared_key1445", shared_by, shared_with).set_iv_nonce(IVNonce().as_b64())
         atclient.put(sk, "test")
         response = atclient.get(sk)
         self.assertEqual("test", response)
 
         # Shared by other with me
-        sk = SharedKey("test_shared_key2", shared_with, shared_by)
-        atclient.put(SharedKey("test_shared_key2", shared_by, shared_with), "test2")
-        response = atclient.get(sk)
+        iv = IVNonce().as_b64()
+        sk1 = SharedKey("test_shared_key2", shared_with, shared_by).set_iv_nonce(iv)
+        sk2 = SharedKey("test_shared_key2", shared_by, shared_with).set_iv_nonce(iv)
+        atclient.put(sk2, "test2")
+        response = atclient.get(sk1)
         self.assertEqual("test2", response)
 
         # Shared Key not found test
@@ -240,7 +245,7 @@ class AtClientTest(unittest.TestCase):
         atsign = AtSign(self.atsign1)
         atclient = AtClient(atsign, verbose=self.verbose)
         random_key_name  = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-        sk = SelfKey(random_key_name, atsign)
+        sk = SelfKey(random_key_name, atsign).set_iv_nonce(IVNonce().as_b64())
         response = atclient.put(sk, "test1")
 
         response = atclient.delete(sk)
@@ -253,7 +258,7 @@ class AtClientTest(unittest.TestCase):
         shared_with = AtSign(self.atsign2)
         atclient = AtClient(shared_by, verbose=self.verbose)
         random_key_name  = ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(6))
-        sk = SharedKey(random_key_name, shared_by, shared_with)
+        sk = SharedKey(random_key_name, shared_by, shared_with).set_iv_nonce(IVNonce().as_b64())
         response = atclient.put(sk, "test1")
 
         response = atclient.delete(sk)

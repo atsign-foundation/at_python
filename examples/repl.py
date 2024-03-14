@@ -133,7 +133,7 @@ def main():
                                     raise Exception("Could not evaluate the key type of: " + fullKeyName)
                             elif verb == "put":
                                 fullKeyName = parts[1]
-                                value = command[verb.length() + fullKeyName.length() + 2:].strip()
+                                value = command[len(verb) + len(fullKeyName) + 2:].strip()
                                 keyStringUtil = KeyStringUtil(full_key_name=fullKeyName)
                                 keyType = keyStringUtil.get_key_type()
                                 if keyType == KeyType.PUBLIC_KEY:

@@ -83,6 +83,10 @@ class AtKey:
     def set_time_to_birth(self, ttb: int):
         self.metadata.ttb = ttb
         return self
+    
+    def set_iv_nonce(self, iv_nonce: str):
+        self.metadata.iv_nonce = iv_nonce
+        return self
 
 
 class PublicKey(AtKey):

@@ -8,8 +8,9 @@ class EncryptionUtilTest(unittest.TestCase):
         """Test generating an AES key and encryption/decryption."""
         secret_key = EncryptionUtil.generate_aes_key_base64()
         plain_text = "AES"
-        encrypted_text = EncryptionUtil.aes_encrypt_from_base64(plain_text, secret_key)
-        decrypted_text = EncryptionUtil.aes_decrypt_from_base64(encrypted_text, secret_key)
+        iv_nonce = EncryptionUtil.generate_iv_nonce()
+        encrypted_text = EncryptionUtil.aes_encrypt_from_base64(plain_text, secret_key, iv_nonce)
+        decrypted_text = EncryptionUtil.aes_decrypt_from_base64(encrypted_text, secret_key, iv_nonce)
         self.assertEqual(plain_text, decrypted_text)
     
     def test_rsa_encryption(self):
