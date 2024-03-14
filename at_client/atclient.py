@@ -1,10 +1,8 @@
-import base64
-import json
+import base64, json, time, traceback, uuid
 from queue import Empty, Queue
-import time
-import traceback
 
 from at_client.connections.notification.atevents import AtEvent, AtEventType
+from at_client.connections.notification.atnotificationservice import AtNotificationService
 
 
 from .common.atsign import AtSign
@@ -38,6 +36,9 @@ class AtClient(ABC):
         self.secondary_connection.connect()
         AuthUtil.authenticate_with_pkam(self.secondary_connection, self.atsign, self.keys)
         self.authenticated = True
+        if queue != None:
+            self.notification_service = AtNotificationService(self, verbose=verbose)
+    
     
     def get_at_keys(self, regex, fetch_metadata):
         scan_command = ScanVerbBuilder().set_regex(regex).set_show_hidden(True).build()
@@ -344,6 +345,9 @@ class AtClient(ABC):
             self.secondary_connection.disconnect()
 
     def start_monitor(self, regex=""):
+        '''
+        DEPRECATED: use AtNotificationService instead 
+        '''
         if self.queue != None:
             global should_be_running_lock
             what = ""
@@ -367,6 +371,9 @@ class AtClient(ABC):
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
     def stop_monitor(self):
+        '''
+        DEPRECATED: use AtNotificationService instead 
+        '''
         if self.queue != None:
             global should_be_running_lock
             what = ""
@@ -386,7 +393,11 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
 
+
     def handle_event(self, queue, at_event):
+        '''
+        DEPRECATED: use AtNotificationService instead 
+        '''
         if self.queue != None:
             try:
                 event_type = at_event.event_type
@@ -406,13 +417,16 @@ class AtClient(ABC):
                         key = event_data["key"]
                         encrypted_value = event_data["value"]
                         ivNonce = event_data["metadata"]["ivNonce"]
+                        self.secondary_connection.execute_command("notify:remove:" + event_data["id"])
                         try:
                             encryption_key_shared_by_other = self.get_encryption_key_shared_by_other(SharedKey.from_string(key=key))
                             decrypted_value = EncryptionUtil.aes_decrypt_from_base64(encrypted_text=encrypted_value.encode(), self_encryption_key=encryption_key_shared_by_other, iv=base64.b64decode(ivNonce))
                             new_event_data = dict(event_data)
                             new_event_data["decryptedValue"] = decrypted_value
                             new_at_event = AtEvent(AtEventType.DECRYPTED_UPDATE_NOTIFICATION, new_event_data)
-                            queue.put(new_at_event)
+                            #What should I do about legacy code that is expecting the decrypted event to be in the queue?
+                            self.decrypted_events.put(new_at_event)
+                            #self.queue.put(new_at_event)
                         except Exception as e:
                             print(str(time.time()) + ": caught exception " + str(e) + " while decrypting received data with key name [" + key + "]")
             except Empty:
@@ -420,6 +434,7 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
+   
     def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE, session_id = str(uuid.uuid4())):
         iv = at_key.metadata.iv_nonce
         shared_key = self.get_encryption_key_shared_by_me(at_key)
