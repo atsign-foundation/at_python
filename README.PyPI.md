@@ -1,6 +1,6 @@
 <h1><img width=250px src="https://atsign.com/wp-content/uploads/2022/05/atsign-logo-horizontal-color2022.svg" alt="The Atsign Foundation"></h1>
 
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/atsign-foundation/at_python/badge)](https://api.securityscorecards.dev/projects/github.com/atsign-foundation/at_python)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/atsign-foundation/at_python/badge)](https://securityscorecards.dev/viewer/?uri=github.com/atsign-foundation/at_python&sort_by=check-score&sort_direction=desc)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8104/badge)](https://www.bestpractices.dev/projects/8104)
 
 # The atPlatform for Python developers - (Beta Version)
