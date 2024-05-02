@@ -19,9 +19,10 @@ class AtMonitorConnection(AtSecondaryConnection):
     running: bool = False
     should_be_running: bool = False
     
-    def __init__(self, queue:queue.Queue, atsign:AtSign, address: Address, context:ssl.SSLContext=ssl.create_default_context(), verbose:bool=True):
+    def __init__(self, queue:queue.Queue, atsign:AtSign, address: Address, context:ssl.SSLContext=ssl.create_default_context(), verbose:bool=True, regex=".*"):
         self.atsign = atsign
         self.queue = queue
+        self.regex = regex
         self._verbose = verbose
         super().__init__(address, context, verbose)
         self._last_heartbeat_sent_time = TimeUtil.current_time_millis()
@@ -79,7 +80,7 @@ class AtMonitorConnection(AtSecondaryConnection):
             except Exception as ignore:
                 pass
                 
-    def start_monitor(self, regex):
+    def start_monitor(self):
         self._last_heartbeat_sent_time = self._last_heartbeat_ack_time = TimeUtil.current_time_millis()
         
         should_be_running_lock.acquire(blocking=1)
@@ -100,7 +101,7 @@ class AtMonitorConnection(AtSecondaryConnection):
                     self.running = False
                     running_lock.release()
                     return False
-            self._run(regex)
+            self._run()
         else:
             running_lock.release()
         return True
@@ -113,11 +114,11 @@ class AtMonitorConnection(AtSecondaryConnection):
         self._last_heartbeat_sent_time = self._last_heartbeat_ack_time = TimeUtil.current_time_millis()
         self.disconnect()
         
-    def _run(self, regex):
+    def _run(self):
         what = ""
         first = True
         try:
-            monitor_cmd = "monitor:" + str(self.last_received_time) + " " + regex
+            monitor_cmd = "monitor:" + str(self.last_received_time) + " " + self.regex
             what = "send monitor command " + monitor_cmd
             self.execute_command(command=monitor_cmd, retry_on_exception=True, read_the_response=False)
             print("Monitor started on " + str(self.atsign.to_string()))
