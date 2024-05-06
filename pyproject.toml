@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "atsdk"
-version = "0.2.11"
+version = "0.2.12"
 description = "Python SDK for atPlatform"
 authors = ["Umang Shah <shahumang19@gmail.com>","Chris Swan <chris@atsign.com>"]
 maintainers = ["Chris Swan <chris@atsign.com>"]
@@ -11,7 +11,7 @@ homepage = "https://github.com/atsign-foundation/at_python"
 [tool.poetry.dependencies]
 python = "^3.8.1"
 cffi = "1.16.0"
-cryptography = "42.0.5"
+cryptography = "42.0.6"
 pycparser = "2.22"
 python-dateutil = "2.9.0.post0"
 requests = "2.31.0"
