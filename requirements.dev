@@ -1,7 +1,7 @@
 certifi==2024.2.2 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
     --hash=sha256:0569859f95fc761b18b45ef421b1290a0f65f147e92a1e5eb3e635f9a5e4e66f \
     --hash=sha256:dc383c07b76109f368f6106eee2b593b04a011ea4d55f652c6ca24a754d1cdd1
-cffi==1.16.0 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
+cffi==1.16.0 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" and platform_python_implementation != "PyPy" \
     --hash=sha256:0c9ef6ff37e974b73c25eecc13952c55bceed9112be2d9d938ded8e856138bcc \
     --hash=sha256:131fd094d1065b19540c3d72594260f118b231090295d8c34e19a7bbcf2e860a \
     --hash=sha256:1b8ebc27c014c59692bb2664c7d13ce7a6e9a629be20e54e7271fa696ff2b417 \
@@ -208,7 +208,7 @@ pluggy==1.5.0 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0"
 pycodestyle==2.11.1 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
     --hash=sha256:41ba0e7afc9752dfb53ced5489e89f8186be00e599e712660695b7a75ff2663f \
     --hash=sha256:44fe31000b2d866f2e41841b18528a505fbd7fef9017b04eff4e2648a0fadc67
-pycparser==2.22 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
+pycparser==2.22 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" and platform_python_implementation != "PyPy" \
     --hash=sha256:491c8be9c040f5390f5bf44a5b07752bd07f56edf992381b05c701439eec10f6 \
     --hash=sha256:c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc
 pyflakes==3.2.0 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
