@@ -1,7 +1,7 @@
 <h1><a href="https://atsign.com#gh-light-mode-only"><img width=250px src="https://atsign.com/wp-content/uploads/2022/05/atsign-logo-horizontal-color2022.svg#gh-light-mode-only" alt="The Atsign Foundation"></a><a href="https://atsign.com#gh-dark-mode-only"><img width=250px src="https://atsign.com/wp-content/uploads/2023/08/atsign-logo-horizontal-reverse2022-Color.svg#gh-dark-mode-only" alt="The Atsign Foundation"></a>
 
 [![GitHub License](https://img.shields.io/badge/license-BSD3-blue.svg)](./LICENSE)
-[![PyPI version](https://badge.fury.io/py/sshnpd.svg)](https://badge.fury.io/py/sshnpd)
+[![PyPI version](https://badge.fury.io/py/atsdk.svg)](https://badge.fury.io/py/atsdk)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/atsign-foundation/at_python/badge)](https://securityscorecards.dev/viewer/?uri=github.com/atsign-foundation/at_python&sort_by=check-score&sort_direction=desc)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8104/badge)](https://www.bestpractices.dev/projects/8104)
 
