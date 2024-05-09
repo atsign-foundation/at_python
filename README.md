@@ -4,6 +4,7 @@
 [![PyPI version](https://badge.fury.io/py/atsdk.svg)](https://badge.fury.io/py/atsdk)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/atsign-foundation/at_python/badge)](https://securityscorecards.dev/viewer/?uri=github.com/atsign-foundation/at_python&sort_by=check-score&sort_direction=desc)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8104/badge)](https://www.bestpractices.dev/projects/8104)
+[![SLSA 3](https://slsa.dev/images/gh-badge-level3.svg)](https://slsa.dev)
 
 # The atPlatform for Python developers - (Beta Version)
 
