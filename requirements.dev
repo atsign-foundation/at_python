@@ -220,9 +220,9 @@ pytest==8.2.1 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0"
 python-dateutil==2.9.0.post0 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
     --hash=sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3 \
     --hash=sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427
-requests==2.32.1 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
-    --hash=sha256:21ac9465cdf8c1650fe1ecde8a71669a93d4e6f147550483a2967d08396a56a5 \
-    --hash=sha256:eb97e87e64c79e64e5b8ac75cee9dd1f97f49e289b083ee6be96268930725685
+requests==2.32.2 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
+    --hash=sha256:dd951ff5ecf3e3b3aa26b40703ba77495dab41da839ae72ef3c8e5d8e2433289 \
+    --hash=sha256:fc06670dd0ed212426dfeb94fc1b983d917c4f9847c863f313c9dfaaffb7c23c
 six==1.16.0 ; python_full_version >= "3.8.1" and python_full_version < "4.0.0" \
     --hash=sha256:1e61c37477a1626458e36f7b1d82aa5c9b094fa4802892072e49de9c60c4c926 \
     --hash=sha256:8abb2f1d86890a2dfb989f9a77cfcfd3e47c2a354b01111771326f8aa26e0254
