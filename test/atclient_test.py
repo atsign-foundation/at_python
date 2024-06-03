@@ -195,7 +195,7 @@ class AtClientTest(unittest.TestCase):
         self.assertEqual("test1", response)
 
         # Public Key not found test
-        with self.assertRaises(AtInternalServerException):
+        with self.assertRaises(AtKeyNotFoundException):
             unknown_pk = PublicKey("unknown_key", atsign)
             response = atclient.get(unknown_pk)
 
