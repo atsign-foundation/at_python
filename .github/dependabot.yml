@@ -5,8 +5,15 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-
+    groups:
+      github-actions:
+        patterns:
+          - "*"
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "daily"
+    groups:
+      pip:
+        patterns:
+          - "*"
