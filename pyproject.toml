@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "atsdk"
-version = "0.2.20"
+version = "0.2.21"
 description = "Python SDK for atPlatform"
 authors = ["Umang Shah <shahumang19@gmail.com>","Chris Swan <chris@atsign.com>"]
 maintainers = ["Chris Swan <chris@atsign.com>"]
@@ -15,7 +15,7 @@ python-dateutil = "2.9.0.post0"
 requests = "2.32.3"
 
 [tool.poetry.group.dev.dependencies]
-pip ="24.0"
+pip ="24.1"
 flake8 = "7.1.0"
 pytest = "8.2.2"
 
