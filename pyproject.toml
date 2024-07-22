@@ -10,14 +10,14 @@ homepage = "https://github.com/atsign-foundation/at_python"
 
 [tool.poetry.dependencies]
 python = "^3.8.1"
-cryptography = "42.0.8"
+cryptography = "43.0.0"
 python-dateutil = "2.9.0.post0"
 requests = "2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 pip ="24.1.2"
 flake8 = "7.1.0"
-pytest = "8.2.2"
+pytest = "8.3.1"
 
 [build-system]
 requires = ["poetry-core"]
