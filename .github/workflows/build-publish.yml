@@ -64,6 +64,7 @@ jobs:
       uses: pypa/gh-action-pypi-publish@0ab0b79471669eb3a4d647e625009c62f9f3b241 # v1.10.1
       with:
         skip-existing: true
+        attestations: true
         repository-url: https://test.pypi.org/legacy/
 
   publish-to-pypi:
@@ -87,6 +88,7 @@ jobs:
       uses: pypa/gh-action-pypi-publish@0ab0b79471669eb3a4d647e625009c62f9f3b241 # v1.10.1
       with:
         skip-existing: true
+        attestations: true
 
   github-release:
     name: Attest Python distribution artifacts and upload them to the GitHub Release
