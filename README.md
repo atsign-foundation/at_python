@@ -11,6 +11,21 @@
 This repo contains library, samples and examples for developers who wish
 to work with the atPlatform from Python code.
 
+## Python 3.8 deprecation
+
+This SDK was created to support Python 3.8 (specifically 3.8.1 due to some
+dependency requirements). As of 7 Oct 2024 Python 3.8 is end-of-life, and
+will no longer receive security patches. Occordingly we have
+[decided](https://github.com/atsign-foundation/at_protocol/blob/trunk/decisions/2024-10-python-deprecation.md)
+to continue support for 3.8 for another 6 months (on a best efforts basis).
+From 7 Apr 2025 Python 3.8 will be removed from the test matrix, and
+pyproject.toml will be bumped to require Python 3.9.
+
+Older versions of this package will of course remain available on
+[PyPI](https://pypi.org/project/atsdk/), though they may lack features,
+fixes and security updates; so it is recommended that you try to update
+to a more recent Python.
+
 ## Getting Started
 
 ### 1. Installation
