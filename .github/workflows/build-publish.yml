@@ -61,7 +61,7 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Publish distribution to TestPyPI
-      uses: pypa/gh-action-pypi-publish@fb13cb306901256ace3dab689990e13a5550ffaa # v1.11.0
+      uses: pypa/gh-action-pypi-publish@61da13deb5f5124fb1536194f82ed3d9bbc7e8f3 # v1.12.0
       with:
         skip-existing: true
         attestations: true
@@ -85,7 +85,7 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Publish distribution to PyPI
-      uses: pypa/gh-action-pypi-publish@fb13cb306901256ace3dab689990e13a5550ffaa # v1.11.0
+      uses: pypa/gh-action-pypi-publish@61da13deb5f5124fb1536194f82ed3d9bbc7e8f3 # v1.12.0
       with:
         skip-existing: true
         attestations: true
@@ -113,7 +113,7 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Install Syft
-      uses: anchore/sbom-action/download-syft@251a468eed47e5082b105c3ba6ee500c0e65a764 # v0.17.6
+      uses: anchore/sbom-action/download-syft@fc46e51fd3cb168ffb36c6d1915723c47db58abb # v0.17.7
     - name: Generate SBOMs
       run: |
         syft scan file:./requirements.txt \
@@ -128,7 +128,7 @@ jobs:
       run: |
         echo "hashes=$(cat checksums.txt | base64 -w0)" >> "$GITHUB_OUTPUT"
     - name: Attest the release artifacts
-      uses: actions/attest-build-provenance@1c608d11d69870c2092266b3f9a6f3abbf17002c # v1.4.3
+      uses: actions/attest-build-provenance@ef244123eb79f2f7a7e75d99086184180e6d0018 # v1.4.4
       with:
         subject-path: 'dist/**'
     - name: Upload artifact signatures to GitHub Release
