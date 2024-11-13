@@ -113,7 +113,7 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Generate SBOM
-      uses: sbomify/github-action@3d1dd70ca4e6fdbe5b1cd1bcd4a23b1ec085dc3e # v0.2.0
+      uses: sbomify/github-action@a04e82ca42a0d9e6bdb57a2cb1a8978e96b4f45c # v0.3.0
       env:
         TOKEN: ${{ secrets.SBOMIFY_TOKEN }}
         COMPONENT_ID: 'wy8Kpn8rF9'
