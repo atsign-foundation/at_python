@@ -23,9 +23,9 @@ jobs:
       with:
           python-version: '3.11'
     - name: Install Poetry
-      uses: abatilo/actions-poetry@e78f54a89cb052fff327414dd9ff010b5d2b4dbd # v3.0.1
+      uses: abatilo/actions-poetry@3765cf608f2d4a72178a9fc5b918668e542b89b1 # v4.0.0
       with:
-        poetry-version: '1.8.2'
+        poetry-version: '1.8.5'
     # The dark mode and light mode Atsign logos in the GitHub README don't
     # show properly on PyPI so we have a copy of the README.md in
     # README.PyPI.md with just the light mode logo.
