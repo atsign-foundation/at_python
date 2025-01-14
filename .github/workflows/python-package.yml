@@ -16,7 +16,7 @@ jobs:
   build:
     # Don't run on PRs from a fork as the secrets aren't available
     if: ${{ github.event.pull_request.head.repo.fork == false }}
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       max-parallel: 1
@@ -31,17 +31,21 @@ jobs:
       uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v5.3.0
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Install uv
+      uses: astral-sh/setup-uv@887a942a15af3a7626099df99e897a18d9e5ab3a # v5.1.0
+      with:
+        version: "0.5.18"
+    - name: Install dependencies, Lint with flake8, Test with pytest
       run: |
-        python3 -m pip install --require-hashes -r requirements.dev
-    - name: Lint with flake8
-      run: |
+        sudo apt-get install python3-poetry-plugin-export
+        uv venv
+        . .venv/bin/activate
+        poetry export --format requirements.txt --output requirements.dev --with dev
+        uv pip install --require-hashes -r requirements.dev
         # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv,.git
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
         mkdir keys
         echo '${{secrets.BARRACUDA_ATKEYS}}' > keys/@27barracuda_key.atKeys
         echo '${{secrets.AMATEUR_ATKEYS}}' > keys/@amateur93_key.atKeys
