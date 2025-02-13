@@ -26,6 +26,12 @@ Older versions of this package will of course remain available on
 fixes and security updates; so it is recommended that you try to update
 to a more recent Python.
 
+## Python 3.9.0 and 3.9.1 not supported
+
+To deal with a security vulnerability in the underlying OpenSSL library the
+cryptography package was bumped to 44.0.1, and this forced the removal of
+Python 3.9.0 and 3.9.1. Later versions of Python 3.9 are supported.
+
 ## Getting Started
 
 ### 1. Installation
