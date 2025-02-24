@@ -39,7 +39,7 @@ jobs:
       run: |
         poetry build
     - name: Store the distribution packages
-      uses: actions/upload-artifact@65c4c4a1ddee5b72f698fdd19549f0f0fb45cf08 # v4.6.0
+      uses: actions/upload-artifact@4cec3d8aa04e39d1a68397de0c4cd6fb9dce8ec1 # v4.6.1
       with:
         name: python-package-distributions
         path: dist/
@@ -113,7 +113,7 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Generate SBOM
-      uses: sbomify/github-action@a04e82ca42a0d9e6bdb57a2cb1a8978e96b4f45c # v0.3.0
+      uses: sbomify/github-action@c9708bc8a1e1fd8adee088904ed6e4bc101f6eeb # v0.3.1
       env:
         TOKEN: ${{ secrets.SBOMIFY_TOKEN }}
         COMPONENT_ID: 'wy8Kpn8rF9'
