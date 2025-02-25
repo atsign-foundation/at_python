@@ -113,7 +113,7 @@ jobs:
         name: python-package-distributions
         path: dist/
     - name: Generate SBOM
-      uses: sbomify/github-action@c9708bc8a1e1fd8adee088904ed6e4bc101f6eeb # v0.3.1
+      uses: sbomify/github-action@e6cdc68ce11d640b652364c25f806db4a8bfa16c # v0.3.2
       env:
         TOKEN: ${{ secrets.SBOMIFY_TOKEN }}
         COMPONENT_ID: 'wy8Kpn8rF9'
@@ -151,7 +151,7 @@ jobs:
       actions: read # Needed for detection of GitHub Actions environment.
       id-token: write # Needed for provenance signing and ID
       contents: write # Needed for release uploads
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.0.0 # 5a775b367a56d5bd118a224a811bba288150a563
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v2.1.0 # 5a775b367a56d5bd118a224a811bba288150a563
     with:
       base64-subjects: "${{ needs.github-release.outputs.hashes }}"
       upload-assets: true
