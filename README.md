@@ -18,8 +18,8 @@ dependency requirements). As of 7 Oct 2024 Python 3.8 is end-of-life, and
 will no longer receive security patches. Occordingly we have
 [decided](https://github.com/atsign-foundation/at_protocol/blob/trunk/decisions/2024-10-python-deprecation.md)
 to continue support for 3.8 for another 6 months (on a best efforts basis).
-From 7 Apr 2025 Python 3.8 will be removed from the test matrix, and
-pyproject.toml will be bumped to require Python 3.9.
+As 7 Apr 2025 has now passed, Python 3.8 has been removeded from the test
+matrix, and pyproject.toml bumped to require Python 3.9(.2).
 
 Older versions of this package will of course remain available on
 [PyPI](https://pypi.org/project/atsdk/), though they may lack features,
