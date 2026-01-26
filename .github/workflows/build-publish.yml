@@ -120,7 +120,7 @@ jobs:
         TOKEN: ${{ secrets.SBOMIFY_TOKEN }}
         COMPONENT_ID: 'wy8Kpn8rF9'
         LOCK_FILE: './poetry.lock'
-        SBOM_VERSION: ${{github.ref_name}}
+        COMPONENT_VERSION: ${{github.ref_name}}-gha${{github.run_number}}
         OUTPUT_FILE: 'dist/at_python-${{github.ref_name}}-sbom.cdx.json'
         AUGMENT: true
         ENRICH: true
