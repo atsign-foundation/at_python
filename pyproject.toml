@@ -16,7 +16,7 @@ python-dateutil = "2.9.0.post0"
 requests = "2.32.5"
 
 [tool.poetry.group.dev.dependencies]
-pip ="25.3"
+pip ="26.0"
 flake8 = "7.3.0"
 pytest = "8.4.2"
 
