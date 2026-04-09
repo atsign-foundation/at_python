@@ -10,7 +10,7 @@ packages = [{include = "at_client"}]
 homepage = "https://github.com/atsign-foundation/at_python"
 
 [tool.poetry.dependencies]
-python = ">=3.9.2"
+python = ">=3.10.0"
 cryptography = "46.0.7"
 python-dateutil = "2.9.0.post0"
 requests = "2.33.1"
