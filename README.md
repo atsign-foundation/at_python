@@ -11,26 +11,6 @@
 This repo contains library, samples and examples for developers who wish
 to work with the atPlatform from Python code.
 
-## Python 3.9 deprecation
-
-As of Oct 2025 Python 3.9 is end-of-life, and will no longer receive
-security patches. We have previously
-[decided](https://github.com/atsign-foundation/at_protocol/blob/trunk/decisions/2024-10-python-deprecation.md)
-to continue support for 3.9 for another 6 months (on a best efforts basis).
-From Apr 2026, Python 3.9 will be removeded from the test
-matrix, and pyproject.toml bumped to require Python 3.10.
-
-Older versions of this package will of course remain available on
-[PyPI](https://pypi.org/project/atsdk/), though they may lack features,
-fixes and security updates; so it is recommended that you try to update
-to a more recent Python.
-
-## Python 3.9.0 and 3.9.1 not supported
-
-To deal with a security vulnerability in the underlying OpenSSL library the
-cryptography package was bumped to 44.0.1, and this forced the removal of
-Python 3.9.0 and 3.9.1. Later versions of Python 3.9 are supported.
-
 ## Getting Started
 
 ### 1. Installation
