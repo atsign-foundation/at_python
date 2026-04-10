@@ -18,7 +18,7 @@ requests = "2.33.1"
 [tool.poetry.group.dev.dependencies]
 pip ="26.0.1"
 flake8 = "7.3.0"
-pytest = "8.4.2"
+pytest = "9.0.2"
 
 [build-system]
 requires = ["poetry-core"]
