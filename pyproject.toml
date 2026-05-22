@@ -13,7 +13,7 @@ homepage = "https://github.com/atsign-foundation/at_python"
 python = ">=3.10.0"
 cryptography = "48.0.0"
 python-dateutil = "2.9.0.post0"
-requests = "2.34.1"
+requests = "2.34.2"
 
 [tool.poetry.group.dev.dependencies]
 pip ="26.1.1"
