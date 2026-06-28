@@ -1,0 +1,40 @@
+name: Bump pyproject.toml
+on:
+  pull_request:
+    paths:
+      - 'pyproject.toml'
+
+permissions:
+  pull-requests: write
+  
+jobs:
+  bump_requirements:
+    if: ${{ github.actor == 'dependabot[bot]' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout this repo
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      with:
+        fetch-depth: 0
+        ref: ${{ github.event.pull_request.head.ref }}
+        token: ${{ secrets.MY_GITHUB_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+      with:
+          python-version: '3.13'
+
+    - name: Install Poetry
+      uses: abatilo/actions-poetry@3765cf608f2d4a72178a9fc5b918668e542b89b1 # v4.0.0
+      with:
+        poetry-version: '1.8.2'
+    
+    - name: Bump Python dependencies
+      run: |
+        git config --global user.name 'library-action[bot]'
+        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        poetry version patch
+        git add pyproject.toml
+        git commit -m "build(deps): Bump poetry version"
+        git push

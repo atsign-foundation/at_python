@@ -360,5 +360,15 @@ class AtVerbBuilderTest(unittest.TestCase):
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
         self.assertRegex(command_without_id, "notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
         
+        
+        #with a shared key, with metadata and namespace (no caching)
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
+        metadata = Metadata(ttln="1000")
+        sk.metadata = metadata
+        sk.namespace = ".dave"
+        command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertRegex(command_without_id, "notify:update:ttln:1000:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
+        
 if __name__ == '__main__':
     unittest.main()

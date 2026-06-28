@@ -16,32 +16,34 @@ jobs:
   build:
     # Don't run on PRs from a fork as the secrets aren't available
     if: ${{ github.event.pull_request.head.repo.fork == false }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       max-parallel: 1
       fail-fast: false
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
 
     steps:
     - name: Checkout at_python
-      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@65d7f2d534ac1bc67fcd62888c5f4f3d2cb2b236 # v4.7.1
+      uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
+    - name: Install uv
+      uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+    - name: Install dependencies, Lint with flake8, Test with pytest
       run: |
-        python3 -m pip install --require-hashes -r requirements.txt
-    - name: Lint with flake8
-      run: |
+        sudo apt-get install python3-poetry-plugin-export
+        uv venv
+        . .venv/bin/activate
+        poetry export --format requirements.txt --output requirements.dev --with dev
+        uv pip install --require-hashes -r requirements.dev
         # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude .venv,.git --ignore=F824
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
-      run: |
         mkdir keys
         echo '${{secrets.BARRACUDA_ATKEYS}}' > keys/@27barracuda_key.atKeys
         echo '${{secrets.AMATEUR_ATKEYS}}' > keys/@amateur93_key.atKeys

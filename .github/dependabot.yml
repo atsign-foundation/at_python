@@ -5,8 +5,19 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
-
+    cooldown:
+      default-days: 7
+    groups:
+      github-actions:
+        patterns:
+          - "*"
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
+    groups:
+      pip:
+        patterns:
+          - "*"

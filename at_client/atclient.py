@@ -350,21 +350,21 @@ class AtClient(ABC):
         if self.secondary_connection:
             self.secondary_connection.disconnect()
 
-    def start_monitor(self, regex=""):
+    def start_monitor(self, regex=".*"):
         if self.queue != None:
             global should_be_running_lock
             what = ""
             try:
                 if self.monitor_connection == None:
                     what = "construct an AtMonitorConnection"
-                    self.monitor_connection = AtMonitorConnection(queue=self.queue, atsign=self.atsign, address=self.secondary_address, verbose=self.verbose)
+                    self.monitor_connection = AtMonitorConnection(queue=self.queue, atsign=self.atsign, address=self.secondary_address, verbose=self.verbose, regex=regex)
                     self.monitor_connection.connect()
                     AuthUtil.authenticate_with_pkam(self.monitor_connection, self.atsign, self.keys)
                 should_be_running_lock.acquire(blocking=1)
                 if not self.monitor_connection.running:
                     should_be_running_lock.release()
                     what = "call monitor_connection.start_monitor()"
-                    self.monitor_connection.start_monitor(regex)
+                    self.monitor_connection.start_monitor()
                 else:
                     should_be_running_lock.release()
             except Exception as e:
@@ -427,11 +427,11 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-    def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE):
+    def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE, session_id = str(uuid.uuid4())):
         iv = at_key.metadata.iv_nonce
         shared_key = self.get_encryption_key_shared_by_me(at_key)
         encrypted_value = EncryptionUtil.aes_encrypt_from_base64(value, shared_key, iv)
-        command = NotifyVerbBuilder().with_at_key(at_key, encrypted_value, operation).build()
+        command = NotifyVerbBuilder().with_at_key(at_key, encrypted_value, operation, session_id).build()
         notify_result = self.secondary_connection.execute_command(command)
         return notify_result.get_raw_data_response()
         

@@ -490,6 +490,7 @@ class NotifyVerbBuilder(VerbBuilder):
         self.operation = None
         self.message_type = None
         self.metadata = None
+        self.session_id = None
 
     def set_value(self, value):
         self.value = value
@@ -534,8 +535,12 @@ class NotifyVerbBuilder(VerbBuilder):
     def set_namespace(self, namespace):
         self.namespace = namespace
         return self
+    
+    def set_session_id(self, session_id):
+        self.session_id = session_id
+        return self
 
-    def with_at_key(self, at_key, encrypted_value, operation=OperationEnum.UPDATE):
+    def with_at_key(self, at_key, encrypted_value, operation=OperationEnum.UPDATE, session_id=None):
         self.set_key_name(at_key.name)
         self.set_shared_by(str(at_key.shared_by))
         self.set_shared_with(str(at_key.shared_with))
@@ -545,6 +550,7 @@ class NotifyVerbBuilder(VerbBuilder):
         self.set_metadata(at_key.metadata)
         self.set_value(encrypted_value)
         self.set_namespace(at_key.namespace)
+        self.set_session_id(session_id)
         self.operation = operation
         if self.message_type is None:
             self.message_type = MessageTypeEnum.KEY
@@ -554,7 +560,7 @@ class NotifyVerbBuilder(VerbBuilder):
     def build(self):
         if self.key is None or (self.shared_with is None and not self.is_public):
             raise ValueError("key is None or, you have a public key with no shared_with. These are required fields")
-        s = f"notify:id:{uuid.uuid4()}:"
+        s = f"notify:id:{self.session_id}:"
         if self.operation:
             s+= f"{str(self.operation.value)}"
         if self.metadata:
