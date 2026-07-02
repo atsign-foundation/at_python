@@ -68,8 +68,11 @@ class Metadata:
         metadata.shared_key_enc = data.get('sharedKeyEnc')
         metadata.pub_key_cs = data.get('pubKeyCS')
         metadata.encoding = data.get('encoding')
-        metadata.iv_nonce = data.get('ivNonce')
-        
+        # ivNonce travels as base64 on the wire; keep it as raw bytes internally so it
+        # round-trips with generate_iv_nonce()/__str__ and is usable directly as an IV.
+        _iv = data.get('ivNonce')
+        metadata.iv_nonce = binascii.a2b_base64(_iv) if _iv else None
+
         return metadata
     
     @staticmethod
@@ -100,7 +103,9 @@ class Metadata:
         metadata.shared_key_enc = data_dict.get('sharedKeyEnc')
         metadata.pub_key_cs = data_dict.get('pubKeyCS')
         metadata.encoding = data_dict.get('encoding')
-        metadata.iv_nonce = data_dict.get('ivNonce')
+        # ivNonce travels as base64; keep raw bytes internally (see from_json).
+        _iv = data_dict.get('ivNonce')
+        metadata.iv_nonce = binascii.a2b_base64(_iv) if _iv else None
         
         return metadata
 

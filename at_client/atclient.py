@@ -21,6 +21,11 @@ from .connections.address import Address
 from .common.keys import AtKey, Keys, SharedKey, PrivateHiddenKey, PublicKey, SelfKey
 from .util.authutil import AuthUtil
 
+# The 16-byte all-zero IV used before random IVs existed. Matches the Dart SDK's
+# AtChopsUtil.generateIVLegacy() / getIV(null); used to decrypt legacy data (no ivNonce).
+LEGACY_IV = b"\x00" * 16
+
+
 class AtClient(ABC):
     def __init__(self, atsign:AtSign, root_address:Address=Address("root.atsign.org", 64), secondary_address:Address=None, queue:Queue=None, verbose:bool = False):
         self.atsign = atsign
@@ -186,8 +191,11 @@ class AtClient(ABC):
     def _put_self_key(self, key: SelfKey, value: str):
         key.metadata.data_signature = EncryptionUtil.sign_sha256_rsa(value, self.keys[KeysUtil.encryption_private_key_name])
 
+        # Match the Dart SDK: self keys use the legacy zero IV unless the caller has
+        # already set an ivNonce (Dart does NOT auto-generate one for self keys).
+        iv = key.metadata.iv_nonce if key.metadata.iv_nonce is not None else LEGACY_IV
         try:
-            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name])
+            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name], iv)
         except Exception as e:
             raise AtEncryptionException(f"Failed to encrypt value with self encryption key - {e}")
         
@@ -218,7 +226,11 @@ class AtClient(ABC):
             share_to_encryption_key = self.get_encryption_key_shared_by_me(key)
 
             what = "encrypt value with shared encryption key"
-            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, share_to_encryption_key)
+            # Match the Dart SDK: shared keys always get a random IV, persisted as
+            # ivNonce in the key metadata (which is serialized into the update command).
+            if key.metadata.iv_nonce is None:
+                key.metadata.iv_nonce = EncryptionUtil.generate_iv_nonce()
+            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, share_to_encryption_key, key.metadata.iv_nonce)
         except Exception as e:
             raise AtEncryptionException(f"Failed to {what} - {e}")
 
@@ -255,6 +267,17 @@ class AtClient(ABC):
         return fetched
 
         
+    @staticmethod
+    def _iv_from_fetched(fetched) -> bytes:
+        """Read the IV from a fetched (all) lookup response's metadata.
+
+        Returns the ivNonce bytes if present, else the legacy all-zero IV — matching
+        the Dart SDK's `metadata.ivNonce != null ? fromBase64 : generateIVLegacy()`.
+        """
+        meta = fetched.get("metaData") or {}
+        iv_b64 = meta.get("ivNonce")
+        return base64.b64decode(iv_b64) if iv_b64 else LEGACY_IV
+
     def _get_self_key(self, key: SelfKey):
         command = LlookupVerbBuilder().with_at_key(key, LlookupVerbBuilder.Type.ALL).build()
 
@@ -263,8 +286,9 @@ class AtClient(ABC):
         decrypted_value = None
         encrypted_value = fetched["data"]
         self_encryption_key = self.keys[KeysUtil.self_encryption_key_name]
+        iv = self._iv_from_fetched(fetched)
         try:
-            decrypted_value = EncryptionUtil.aes_decrypt_from_base64(encrypted_value, self_encryption_key)
+            decrypted_value = EncryptionUtil.aes_decrypt_from_base64(encrypted_value, self_encryption_key, iv)
         except Exception as e:
             raise AtDecryptionException(f"Failed to {command} - {e}")
 
@@ -296,38 +320,31 @@ class AtClient(ABC):
     def _get_shared_by_me_with_other(self, shared_key: SharedKey):
         share_encryption_key = self.get_encryption_key_shared_by_me(shared_key)
 
-        raw_response = None
-        command = "llookup:" + str(shared_key)
-        try:
-            raw_response = self.secondary_connection.execute_command(command, True)
-        except (AtKeyNotFoundException, AtInternalServerException) as e: raise e
-        except AtSecondaryConnectException as e:
-            raise AtSecondaryConnectException(f"Failed to execute {command} - {e}")
+        # Use llookup:all so we get the metadata (ivNonce) alongside the value.
+        command = "llookup:all:" + str(shared_key)
+        fetched = self.get_lookup_response(command)
+        iv = self._iv_from_fetched(fetched)
 
         try:
-            return EncryptionUtil.aes_decrypt_from_base64(raw_response.get_raw_data_response(), share_encryption_key)
+            return EncryptionUtil.aes_decrypt_from_base64(fetched["data"], share_encryption_key, iv)
         except Exception as e:
             raise AtDecryptionException(f"Failed to decrypt value with shared encryption key - {e}")
 
     def _get_shared_by_other_with_me(self, shared_key:SharedKey):
-        what = None
         share_encryption_key = self.get_encryption_key_shared_by_other(shared_key)
 
-        raw_response = None
-        command = "lookup:" + shared_key.name
+        # Use lookup:all so we get the metadata (ivNonce) alongside the value.
+        command = "lookup:all:" + shared_key.name
         if shared_key.get_namespace() is not None and shared_key.get_namespace():
             command += "." + shared_key.get_namespace()
         command += str(shared_key.shared_by)
-        try:
-            raw_response = self.secondary_connection.execute_command(command, True)
-        except Exception as e:
-            raise AtSecondaryConnectException(f"Failed to execute {command} - {e}")
+        fetched = self.get_lookup_response(command)
+        iv = self._iv_from_fetched(fetched)
 
-        what = "decrypt value with shared encryption key"
         try:
-            return EncryptionUtil.aes_decrypt_from_base64(raw_response.get_raw_data_response(), share_encryption_key)
+            return EncryptionUtil.aes_decrypt_from_base64(fetched["data"], share_encryption_key, iv)
         except Exception as e:
-            raise AtDecryptionException(f"Failed to {what} - {e}")
+            raise AtDecryptionException(f"Failed to decrypt value with shared encryption key - {e}")
 
     def delete(self, key):
         if isinstance(key, SharedKey) or isinstance(key, SelfKey) or isinstance(key, PublicKey):
