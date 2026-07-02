@@ -3,6 +3,7 @@ import json
 from queue import Empty, Queue
 import time
 import traceback
+import uuid
 
 from at_client.connections.notification.atevents import AtEvent, AtEventType
 
@@ -420,8 +421,19 @@ class AtClient(ABC):
         else:
             raise Exception("You must assign a Queue object to the queue paremeter of AtClient class")
         
-    def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE, session_id = str(uuid.uuid4())):
+    def notify(self, at_key : AtKey, value, operation = OperationEnum.UPDATE, session_id = None):
+        # Generate a fresh session id per call. A default of str(uuid.uuid4()) in the
+        # signature is evaluated once at import, so every notify() without an explicit
+        # id would reuse the same one and the server would dedup/drop the duplicates.
+        if session_id is None:
+            session_id = str(uuid.uuid4())
+        # Ensure an AES nonce exists. AES-CTR requires one; without it aes_encrypt
+        # raises "nonce must be bytes-like". Generate it here and set it on the key so
+        # it travels in the notification metadata for the receiver to decrypt with.
         iv = at_key.metadata.iv_nonce
+        if iv is None:
+            iv = EncryptionUtil.generate_iv_nonce()
+            at_key.metadata.iv_nonce = iv
         shared_key = self.get_encryption_key_shared_by_me(at_key)
         encrypted_value = EncryptionUtil.aes_encrypt_from_base64(value, shared_key, iv)
         command = NotifyVerbBuilder().with_at_key(at_key, encrypted_value, operation, session_id).build()
