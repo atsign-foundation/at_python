@@ -1,13 +1,14 @@
 import base64
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 from at_client import AtClient
 from at_client.atclient import LEGACY_IV
 from at_client.common import AtSign
-from at_client.common.keys import SharedKey
+from at_client.common.keys import SelfKey, SharedKey
 from at_client.common.metadata import Metadata
 from at_client.util.encryptionutil import EncryptionUtil
+from at_client.util.keysutil import KeysUtil
 
 
 class PutGetIVTest(unittest.TestCase):
@@ -67,6 +68,49 @@ class PutGetIVTest(unittest.TestCase):
         self.assertEqual(len(key.metadata.iv_nonce), 16)          # random 16-byte IV
         b64 = base64.b64encode(key.metadata.iv_nonce).decode()
         self.assertIn(f":ivNonce:{b64}", sent["command"])          # persisted in update cmd
+
+    def test_put_self_key_generates_and_persists_iv(self):
+        client = AtClient.__new__(AtClient)
+        me = AtSign("@alice")
+        client.atsign = me
+        client.keys = {
+            KeysUtil.self_encryption_key_name: EncryptionUtil.generate_aes_key_base64(),
+            KeysUtil.encryption_private_key_name: "x",  # sign is patched below; value unused
+        }
+        sent = {}
+        resp = MagicMock()
+        resp.get_raw_data_response.return_value = "data:ok"
+
+        def _exec(command, *a, **k):
+            sent["command"] = command
+            return resp
+        client.secondary_connection = MagicMock()
+        client.secondary_connection.execute_command.side_effect = _exec
+
+        key = SelfKey("selfdemo", me)
+        key.set_namespace("test")
+        with patch("at_client.atclient.EncryptionUtil.sign_sha256_rsa", return_value="sig"):
+            client._put_self_key(key, "self secret")
+
+        self.assertEqual(len(key.metadata.iv_nonce), 16)           # random IV generated
+        b64 = base64.b64encode(key.metadata.iv_nonce).decode()
+        self.assertIn(f":ivNonce:{b64}", sent["command"])          # persisted via UpdateVerbBuilder
+
+    def test_self_key_roundtrip_with_random_iv(self):
+        """Encrypt as put-self does, then decrypt as get-self does — via ivNonce."""
+        self_key = EncryptionUtil.generate_aes_key_base64()
+        iv = EncryptionUtil.generate_iv_nonce()
+        cipher = EncryptionUtil.aes_encrypt_from_base64("self value", self_key, iv)
+
+        client = AtClient.__new__(AtClient)
+        client.secondary_connection = None  # silence __del__ during GC
+        client.keys = {KeysUtil.self_encryption_key_name: self_key}
+        fetched = {"key": "selfdemo.test@alice", "data": cipher,
+                   "metaData": {"ivNonce": base64.b64encode(iv).decode()}}
+        client.get_lookup_response = MagicMock(return_value=fetched)
+
+        k = SelfKey("selfdemo", AtSign("@alice")); k.set_namespace("test")
+        self.assertEqual(client._get_self_key(k), "self value")
 
 
 if __name__ == "__main__":

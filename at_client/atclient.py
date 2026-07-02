@@ -191,11 +191,15 @@ class AtClient(ABC):
     def _put_self_key(self, key: SelfKey, value: str):
         key.metadata.data_signature = EncryptionUtil.sign_sha256_rsa(value, self.keys[KeysUtil.encryption_private_key_name])
 
-        # Match the Dart SDK: self keys use the legacy zero IV unless the caller has
-        # already set an ivNonce (Dart does NOT auto-generate one for self keys).
-        iv = key.metadata.iv_nonce if key.metadata.iv_nonce is not None else LEGACY_IV
+        # Generate a random IV per self key too (stored as ivNonce in metadata). Dart's
+        # current SelfKeyEncryption does NOT do this (it uses the zero IV) — that's a
+        # security gap on the Dart side; doing it here is interop-safe because get falls
+        # back to the legacy zero IV when ivNonce is absent, and Dart's self decrypt
+        # already honors ivNonce when present.
+        if key.metadata.iv_nonce is None:
+            key.metadata.iv_nonce = EncryptionUtil.generate_iv_nonce()
         try:
-            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name], iv)
+            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name], key.metadata.iv_nonce)
         except Exception as e:
             raise AtEncryptionException(f"Failed to encrypt value with self encryption key - {e}")
         
