@@ -146,7 +146,7 @@ class AtClient(ABC):
         try:
             return EncryptionUtil.rsa_decrypt_from_base64(response.get_raw_data_response(), self.keys[KeysUtil.encryption_private_key_name])
         except Exception as e:
-            raise AtDecryptionException(f"Failed to decrypt {to_lookup} - e")
+            raise AtDecryptionException(f"Failed to decrypt {to_lookup} - {e}")
         
     def get_encryption_key_shared_by_other(self, shared_key: SharedKey):
         shared_shared_key_name = shared_key.get_shared_shared_key_name()
