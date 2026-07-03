@@ -15,6 +15,9 @@ jobs:
   interop:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      # Run the SDK from source (deps installed from poetry.lock; package not built).
+      PYTHONPATH: ${{ github.workspace }}
     services:
       ee:
         image: atsigncompany/ephemeral
