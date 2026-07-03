@@ -6,6 +6,8 @@ name: interop (Python <-> Dart)
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ fix/put-get-random-iv ]   # TEMP: to trigger a validation run pre-merge
 
 permissions:
   contents: read
