@@ -21,3 +21,14 @@ updates:
       pip:
         patterns:
           - "*"
+  # Dart interop test helper (pubspec + lockfile)
+  - package-ecosystem: "pub"
+    directory: "/test/interop"
+    schedule:
+      interval: "daily"
+    cooldown:
+      default-days: 7
+    groups:
+      pub:
+        patterns:
+          - "*"

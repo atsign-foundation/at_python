@@ -103,13 +103,15 @@ class PutGetIVTest(unittest.TestCase):
         client._put_self_key = MagicMock(return_value="ok")
         me = AtSign("@alice")
 
-        sk = SharedKey("k", me, AtSign("@bob")); sk.set_namespace("test")
+        sk = SharedKey("k", me, AtSign("@bob"))
+        sk.set_namespace("test")
         self.assertIsNone(sk.metadata.iv_nonce)
         client.put(sk, "v")
         self.assertEqual(len(sk.metadata.iv_nonce), 16)
         client._put_shared_key.assert_called_once()
 
-        selfk = SelfKey("k", me); selfk.set_namespace("test")
+        selfk = SelfKey("k", me)
+        selfk.set_namespace("test")
         self.assertIsNone(selfk.metadata.iv_nonce)
         client.put(selfk, "v")
         self.assertEqual(len(selfk.metadata.iv_nonce), 16)
@@ -128,7 +130,8 @@ class PutGetIVTest(unittest.TestCase):
                    "metaData": {"ivNonce": base64.b64encode(iv).decode()}}
         client.get_lookup_response = MagicMock(return_value=fetched)
 
-        k = SelfKey("selfdemo", AtSign("@alice")); k.set_namespace("test")
+        k = SelfKey("selfdemo", AtSign("@alice"))
+        k.set_namespace("test")
         self.assertEqual(client._get_self_key(k), "self value")
 
 

@@ -1,7 +1,6 @@
-# DRAFT — opt-in cross-SDK IV interop test (Python at_client <-> Dart at_client).
-# Manual only (workflow_dispatch). Review before enabling on PRs: it starts the
-# ephemeral environment container, onboards two test atSigns via CRAM, installs the
-# SDK, and runs test/interop_test.py with AT_INTEROP=1.
+# Opt-in cross-SDK IV interop test (Python at_client <-> Dart at_client).
+# Manual only (workflow_dispatch): starts the ephemeral environment container,
+# onboards two test atSigns via CRAM, and runs test/interop_test.py with AT_INTEROP=1.
 name: interop (Python <-> Dart)
 
 on:
@@ -24,62 +23,45 @@ jobs:
           - 64:64
           - 2500-2540:2500-2540
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       - name: Resolve the EE FQDN to localhost (matches the cert CN)
         run: echo "127.0.0.1 vip.ve.atsign.zone" | sudo tee -a /etc/hosts
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
-          python-version: '3.13'
-      - uses: dart-lang/setup-dart@v1
+          python-version: '3.14'
+      - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
+      - name: Install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
 
-      - name: Install the SDK (repo generates README.PyPI.md at publish time)
+      - name: Install SDK dependencies (from poetry.lock)
         run: |
-          cp README.md README.PyPI.md
-          pip install .
+          sudo apt-get install -y python3-poetry-plugin-export
+          uv venv
+          . .venv/bin/activate
+          poetry export --format requirements.txt --output requirements.txt
+          uv pip install --require-hashes -r requirements.txt
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
 
       - name: Wait for the EE root, then onboard @alpha and @bravo (CRAM)
+        env:
+          HOME: /tmp/eehome
         run: |
-          export HOME=/tmp/eehome
           mkdir -p "$HOME/.atsign/keys"
-          # give the root time to register the atServers
-          sleep 30
-          cid=$(docker ps --filter ancestor=atsigncompany/ephemeral --format '{{.ID}}' | head -1)
-          python - "$cid" <<'PY'
-          import subprocess, sys
-          from at_client.connections import Address, AtRootConnection, AtSecondaryConnection
-          from at_client.common import AtSign
-          from at_client.util import AuthUtil, OnboardingUtil, KeysUtil
-          cid = sys.argv[1]
-          root = Address.from_string("vip.ve.atsign.zone:64")
-          for name in ("alpha", "bravo"):
-              atsign = AtSign("@" + name)
-              cram = subprocess.check_output(
-                  ["docker", "exec", cid, "cat", f"/atsign/atservers/{name}/CRAM"]).decode().strip()
-              sec = AtRootConnection.get_instance(root.host, root.port).find_secondary(atsign)
-              conn = AtSecondaryConnection(sec); conn.connect()
-              auth, ob = AuthUtil(), OnboardingUtil()
-              auth.authenticate_with_cram(conn, atsign, cram)
-              keys = {}
-              ob.generate_self_encryption_key(keys); ob.generate_pkam_keypair(keys)
-              ob.generate_encryption_keypair(keys); KeysUtil.save_keys(atsign, keys)
-              ob.store_pkam_public_key(conn, keys)
-              auth.authenticate_with_pkam(conn, atsign, KeysUtil.load_keys(atsign))
-              ob.store_public_encryption_key(conn, atsign.without_prefix, keys)
-              ob.delete_cram_key(conn)
-              print("onboarded @" + name)
-          PY
+          sleep 30   # let the root register the atServers
+          python test/interop/onboard.py @alpha @bravo
 
       - name: dart pub get (interop helper)
         run: dart pub get
         working-directory: test/interop
 
       - name: Run interop test
+        env:
+          HOME: /tmp/eehome
+          AT_INTEROP: '1'
+          AT_ROOT: vip.ve.atsign.zone:64
+          AT_ROOT_DOMAIN: vip.ve.atsign.zone
         run: |
-          # Start from clean Dart local storage (keeps .atKeys). Harmless on a fresh
-          # runner; prevents stale-key errors when re-running against a recreated EE.
-          rm -rf /tmp/eehome/.atsign/storage
-          HOME=/tmp/eehome AT_INTEROP=1 \
-            AT_ROOT=vip.ve.atsign.zone:64 AT_ROOT_DOMAIN=vip.ve.atsign.zone \
-            python -m unittest discover -s test -p 'interop_test.py' -v
+          rm -rf /tmp/eehome/.atsign/storage   # clean Dart local state (keeps .atKeys)
+          python -m unittest discover -s test -p 'interop_test.py' -v
