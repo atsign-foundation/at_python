@@ -98,8 +98,16 @@ class AtConnection(ABC):
         """
         Close the socket connection.
         """
-        self._secure_root_socket.close()
-        self._connected = False
+        # Always clear _connected, even if close() fails on an already-broken socket
+        # (e.g. "Bad file descriptor"). Otherwise _connected stays True and the monitor
+        # restart path (guarded by `if not self._connected`) never rebuilds the socket,
+        # so the client silently stops receiving notifications until it is recreated.
+        try:
+            self._secure_root_socket.close()
+        except Exception:
+            pass
+        finally:
+            self._connected = False
 
     @abstractmethod
     def parse_raw_response(self, raw_response:str) -> Response:
