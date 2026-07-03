@@ -1,0 +1,400 @@
+{
+  "configVersion": 2,
+  "packages": [
+    {
+      "name": "archive",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/archive-4.0.9",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "args",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/args-2.7.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "asn1lib",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/asn1lib-1.6.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "async",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/async-2.13.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "at_auth",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_auth-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "at_base2e15",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_base2e15-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "at_chops",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_chops-3.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "at_cli_commons",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_cli_commons-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "at_client",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_client-3.12.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "at_commons",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_commons-5.11.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "at_lookup",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_lookup-3.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "at_onboarding_cli",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_onboarding_cli-1.15.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "at_persistence_secondary_server",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_persistence_secondary_server-4.3.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "at_persistence_spec",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_persistence_spec-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "at_server_status",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_server_status-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "at_utf7",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_utf7-1.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "at_utils",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/at_utils-3.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.6"
+    },
+    {
+      "name": "better_cryptography",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/better_cryptography-1.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "chalkdart",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/chalkdart-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "charcode",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/charcode-1.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "clock",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/clock-1.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "collection",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/collection-1.19.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "convert",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/convert-3.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "cron",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/cron-0.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "crypto",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/crypto-3.0.7",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "cryptography",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/cryptography-2.9.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "crypton",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/crypton-2.2.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "dart_periphery",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/dart_periphery-0.9.20",
+      "packageUri": "lib/",
+      "languageVersion": "3.3"
+    },
+    {
+      "name": "duration",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/duration-4.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "ecdsa",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/ecdsa-0.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "elliptic",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/elliptic-0.3.12",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "encrypt",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/encrypt-5.0.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "ffi",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/ffi-2.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.7"
+    },
+    {
+      "name": "file",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/file-7.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "fixnum",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/fixnum-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "hive",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/hive-2.2.3",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "http",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/http-1.6.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "http_parser",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/http_parser-4.1.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "image",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/image-4.9.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "internet_connection_checker",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/internet_connection_checker-1.0.0+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.18"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/js-0.6.7",
+      "packageUri": "lib/",
+      "languageVersion": "2.19"
+    },
+    {
+      "name": "json_annotation",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/json_annotation-4.12.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.9"
+    },
+    {
+      "name": "logging",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/logging-1.3.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "meta",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/meta-1.18.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "mutex",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/mutex-3.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
+      "name": "ninja_asn1",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/ninja_asn1-2.0.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "path",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/path-1.9.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "petitparser",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/petitparser-7.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.8"
+    },
+    {
+      "name": "platform",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/platform-3.1.6",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "pointycastle",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/pointycastle-3.9.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.2"
+    },
+    {
+      "name": "posix",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/posix-6.5.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "pqcrypto",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/pqcrypto-0.3.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.10"
+    },
+    {
+      "name": "process",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/process-5.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "source_span",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/source_span-1.10.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "stack_trace",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/stack_trace-1.12.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "string_scanner",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/string_scanner-1.4.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "term_glyph",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/term_glyph-1.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "3.1"
+    },
+    {
+      "name": "typed_data",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/typed_data-1.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.5"
+    },
+    {
+      "name": "uuid",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/uuid-4.5.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "version",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/version-3.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "web",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/web-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "xml",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/xml-7.0.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.11"
+    },
+    {
+      "name": "yaml",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/yaml-3.1.3",
+      "packageUri": "lib/",
+      "languageVersion": "3.4"
+    },
+    {
+      "name": "zxing2",
+      "rootUri": "file:///tmp/eehome/.pub-cache/hosted/pub.dev/zxing2-0.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
+      "name": "at_python_interop",
+      "rootUri": "../",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    }
+  ],
+  "generator": "pub",
+  "generatorVersion": "3.11.5",
+  "flutterRoot": "file:///Users/cconstab/flutter-arm64/flutter",
+  "flutterVersion": "3.41.9",
+  "pubCache": "file:///tmp/eehome/.pub-cache"
+}

@@ -1,0 +1,560 @@
+{
+  "roots": [
+    "at_python_interop"
+  ],
+  "packages": [
+    {
+      "name": "at_python_interop",
+      "version": "0.0.0",
+      "dependencies": [
+        "args",
+        "at_cli_commons",
+        "at_client"
+      ],
+      "devDependencies": []
+    },
+    {
+      "name": "at_cli_commons",
+      "version": "2.2.0",
+      "dependencies": [
+        "args",
+        "at_client",
+        "at_onboarding_cli",
+        "at_utils",
+        "chalkdart",
+        "logging",
+        "meta",
+        "path",
+        "version"
+      ]
+    },
+    {
+      "name": "version",
+      "version": "3.0.2",
+      "dependencies": []
+    },
+    {
+      "name": "args",
+      "version": "2.7.0",
+      "dependencies": []
+    },
+    {
+      "name": "path",
+      "version": "1.9.1",
+      "dependencies": []
+    },
+    {
+      "name": "logging",
+      "version": "1.3.0",
+      "dependencies": []
+    },
+    {
+      "name": "at_client",
+      "version": "3.12.0",
+      "dependencies": [
+        "archive",
+        "async",
+        "at_auth",
+        "at_base2e15",
+        "at_chops",
+        "at_commons",
+        "at_lookup",
+        "at_persistence_secondary_server",
+        "at_utils",
+        "cron",
+        "crypto",
+        "crypton",
+        "encrypt",
+        "hive",
+        "http",
+        "internet_connection_checker",
+        "meta",
+        "mutex",
+        "path",
+        "uuid",
+        "version"
+      ]
+    },
+    {
+      "name": "mutex",
+      "version": "3.1.0",
+      "dependencies": []
+    },
+    {
+      "name": "internet_connection_checker",
+      "version": "1.0.0+1",
+      "dependencies": []
+    },
+    {
+      "name": "hive",
+      "version": "2.2.3",
+      "dependencies": [
+        "crypto",
+        "meta"
+      ]
+    },
+    {
+      "name": "encrypt",
+      "version": "5.0.3",
+      "dependencies": [
+        "args",
+        "asn1lib",
+        "clock",
+        "collection",
+        "crypto",
+        "pointycastle"
+      ]
+    },
+    {
+      "name": "crypton",
+      "version": "2.2.1",
+      "dependencies": [
+        "asn1lib",
+        "pointycastle"
+      ]
+    },
+    {
+      "name": "cron",
+      "version": "0.5.1",
+      "dependencies": [
+        "clock"
+      ]
+    },
+    {
+      "name": "at_persistence_secondary_server",
+      "version": "4.3.5",
+      "dependencies": [
+        "at_commons",
+        "at_persistence_spec",
+        "at_utf7",
+        "at_utils",
+        "cron",
+        "crypto",
+        "hive",
+        "meta",
+        "path",
+        "uuid"
+      ]
+    },
+    {
+      "name": "at_base2e15",
+      "version": "1.0.0",
+      "dependencies": []
+    },
+    {
+      "name": "at_utf7",
+      "version": "1.0.0",
+      "dependencies": []
+    },
+    {
+      "name": "at_persistence_spec",
+      "version": "3.1.0",
+      "dependencies": []
+    },
+    {
+      "name": "clock",
+      "version": "1.1.2",
+      "dependencies": []
+    },
+    {
+      "name": "at_utils",
+      "version": "3.4.0",
+      "dependencies": [
+        "at_commons",
+        "chalkdart",
+        "collection",
+        "crypto",
+        "logging",
+        "yaml"
+      ]
+    },
+    {
+      "name": "crypto",
+      "version": "3.0.7",
+      "dependencies": [
+        "typed_data"
+      ]
+    },
+    {
+      "name": "at_commons",
+      "version": "5.11.0",
+      "dependencies": [
+        "json_annotation",
+        "meta",
+        "uuid"
+      ]
+    },
+    {
+      "name": "at_auth",
+      "version": "3.1.0",
+      "dependencies": [
+        "at_chops",
+        "at_commons",
+        "at_lookup",
+        "at_server_status",
+        "at_utils",
+        "crypton",
+        "http",
+        "meta"
+      ]
+    },
+    {
+      "name": "at_lookup",
+      "version": "3.5.0",
+      "dependencies": [
+        "at_chops",
+        "at_commons",
+        "at_utils",
+        "crypto",
+        "crypton",
+        "meta",
+        "mutex"
+      ]
+    },
+    {
+      "name": "at_server_status",
+      "version": "1.1.1",
+      "dependencies": [
+        "at_lookup"
+      ]
+    },
+    {
+      "name": "archive",
+      "version": "4.0.9",
+      "dependencies": [
+        "path",
+        "posix"
+      ]
+    },
+    {
+      "name": "posix",
+      "version": "6.5.0",
+      "dependencies": [
+        "ffi",
+        "meta",
+        "path"
+      ]
+    },
+    {
+      "name": "yaml",
+      "version": "3.1.3",
+      "dependencies": [
+        "collection",
+        "source_span",
+        "string_scanner"
+      ]
+    },
+    {
+      "name": "typed_data",
+      "version": "1.4.0",
+      "dependencies": [
+        "collection"
+      ]
+    },
+    {
+      "name": "json_annotation",
+      "version": "4.12.0",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "string_scanner",
+      "version": "1.4.1",
+      "dependencies": [
+        "source_span"
+      ]
+    },
+    {
+      "name": "at_chops",
+      "version": "3.3.0",
+      "dependencies": [
+        "args",
+        "at_commons",
+        "at_utils",
+        "better_cryptography",
+        "crypto",
+        "cryptography",
+        "crypton",
+        "dart_periphery",
+        "ecdsa",
+        "elliptic",
+        "encrypt",
+        "ffi",
+        "meta",
+        "pointycastle",
+        "pqcrypto"
+      ]
+    },
+    {
+      "name": "pointycastle",
+      "version": "3.9.1",
+      "dependencies": [
+        "collection",
+        "convert",
+        "js"
+      ]
+    },
+    {
+      "name": "better_cryptography",
+      "version": "1.0.0+1",
+      "dependencies": [
+        "collection",
+        "crypto",
+        "fixnum",
+        "js",
+        "meta",
+        "typed_data"
+      ]
+    },
+    {
+      "name": "pqcrypto",
+      "version": "0.3.1",
+      "dependencies": []
+    },
+    {
+      "name": "elliptic",
+      "version": "0.3.12",
+      "dependencies": []
+    },
+    {
+      "name": "ecdsa",
+      "version": "0.1.2",
+      "dependencies": [
+        "crypto",
+        "elliptic",
+        "ninja_asn1"
+      ]
+    },
+    {
+      "name": "ninja_asn1",
+      "version": "2.0.0",
+      "dependencies": [
+        "collection"
+      ]
+    },
+    {
+      "name": "fixnum",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
+      "name": "cryptography",
+      "version": "2.9.0",
+      "dependencies": [
+        "collection",
+        "crypto",
+        "ffi",
+        "meta",
+        "typed_data"
+      ]
+    },
+    {
+      "name": "js",
+      "version": "0.6.7",
+      "dependencies": [
+        "meta"
+      ]
+    },
+    {
+      "name": "meta",
+      "version": "1.18.3",
+      "dependencies": []
+    },
+    {
+      "name": "async",
+      "version": "2.13.1",
+      "dependencies": [
+        "collection",
+        "meta"
+      ]
+    },
+    {
+      "name": "collection",
+      "version": "1.19.1",
+      "dependencies": []
+    },
+    {
+      "name": "convert",
+      "version": "3.1.2",
+      "dependencies": [
+        "typed_data"
+      ]
+    },
+    {
+      "name": "ffi",
+      "version": "2.2.0",
+      "dependencies": []
+    },
+    {
+      "name": "http",
+      "version": "1.6.0",
+      "dependencies": [
+        "async",
+        "http_parser",
+        "meta",
+        "web"
+      ]
+    },
+    {
+      "name": "web",
+      "version": "1.1.1",
+      "dependencies": []
+    },
+    {
+      "name": "http_parser",
+      "version": "4.1.2",
+      "dependencies": [
+        "collection",
+        "source_span",
+        "string_scanner",
+        "typed_data"
+      ]
+    },
+    {
+      "name": "source_span",
+      "version": "1.10.2",
+      "dependencies": [
+        "collection",
+        "path",
+        "term_glyph"
+      ]
+    },
+    {
+      "name": "term_glyph",
+      "version": "1.2.2",
+      "dependencies": []
+    },
+    {
+      "name": "at_onboarding_cli",
+      "version": "1.15.0",
+      "dependencies": [
+        "args",
+        "at_auth",
+        "at_chops",
+        "at_client",
+        "at_commons",
+        "at_lookup",
+        "at_server_status",
+        "at_utils",
+        "chalkdart",
+        "crypto",
+        "crypton",
+        "duration",
+        "encrypt",
+        "http",
+        "image",
+        "meta",
+        "path",
+        "zxing2"
+      ]
+    },
+    {
+      "name": "duration",
+      "version": "4.0.3",
+      "dependencies": []
+    },
+    {
+      "name": "zxing2",
+      "version": "0.2.4",
+      "dependencies": [
+        "charcode",
+        "collection",
+        "fixnum",
+        "meta"
+      ]
+    },
+    {
+      "name": "charcode",
+      "version": "1.4.0",
+      "dependencies": []
+    },
+    {
+      "name": "asn1lib",
+      "version": "1.6.5",
+      "dependencies": []
+    },
+    {
+      "name": "chalkdart",
+      "version": "3.1.0",
+      "dependencies": []
+    },
+    {
+      "name": "uuid",
+      "version": "4.5.3",
+      "dependencies": [
+        "crypto",
+        "fixnum"
+      ]
+    },
+    {
+      "name": "dart_periphery",
+      "version": "0.9.20",
+      "dependencies": [
+        "archive",
+        "async",
+        "collection",
+        "ffi",
+        "meta",
+        "path",
+        "process",
+        "stack_trace"
+      ]
+    },
+    {
+      "name": "stack_trace",
+      "version": "1.12.1",
+      "dependencies": [
+        "path"
+      ]
+    },
+    {
+      "name": "process",
+      "version": "5.0.5",
+      "dependencies": [
+        "file",
+        "path",
+        "platform"
+      ]
+    },
+    {
+      "name": "platform",
+      "version": "3.1.6",
+      "dependencies": []
+    },
+    {
+      "name": "file",
+      "version": "7.0.1",
+      "dependencies": [
+        "meta",
+        "path"
+      ]
+    },
+    {
+      "name": "image",
+      "version": "4.9.1",
+      "dependencies": [
+        "archive",
+        "xml"
+      ]
+    },
+    {
+      "name": "xml",
+      "version": "7.0.1",
+      "dependencies": [
+        "collection",
+        "meta",
+        "petitparser"
+      ]
+    },
+    {
+      "name": "petitparser",
+      "version": "7.0.2",
+      "dependencies": [
+        "collection",
+        "meta"
+      ]
+    }
+  ],
+  "configVersion": 1
+}
