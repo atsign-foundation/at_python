@@ -96,6 +96,25 @@ class PutGetIVTest(unittest.TestCase):
         b64 = base64.b64encode(key.metadata.iv_nonce).decode()
         self.assertIn(f":ivNonce:{b64}", sent["command"])          # persisted via UpdateVerbBuilder
 
+    def test_put_layer_generates_iv_before_dispatch(self):
+        """put() itself sets the IV (like Dart's _putInternal), before the encryptor."""
+        client = AtClient.__new__(AtClient)
+        client._put_shared_key = MagicMock(return_value="ok")
+        client._put_self_key = MagicMock(return_value="ok")
+        me = AtSign("@alice")
+
+        sk = SharedKey("k", me, AtSign("@bob")); sk.set_namespace("test")
+        self.assertIsNone(sk.metadata.iv_nonce)
+        client.put(sk, "v")
+        self.assertEqual(len(sk.metadata.iv_nonce), 16)
+        client._put_shared_key.assert_called_once()
+
+        selfk = SelfKey("k", me); selfk.set_namespace("test")
+        self.assertIsNone(selfk.metadata.iv_nonce)
+        client.put(selfk, "v")
+        self.assertEqual(len(selfk.metadata.iv_nonce), 16)
+        client._put_self_key.assert_called_once()
+
     def test_self_key_roundtrip_with_random_iv(self):
         """Encrypt as put-self does, then decrypt as get-self does — via ivNonce."""
         self_key = EncryptionUtil.generate_aes_key_base64()

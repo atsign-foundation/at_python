@@ -179,6 +179,13 @@ class AtClient(ABC):
 
 
     def put(self, key, value):
+        # Generate the IV once here, before dispatching to the per-type encryptor —
+        # mirroring the Dart SDK's AtClientImpl._putInternal, which sets a random ivNonce
+        # for every put ahead of encryption. This guarantees every encrypted put gets a
+        # random IV regardless of key type; the per-type _put_* methods keep a `?=`
+        # backstop so direct calls are safe too. Public keys aren't encrypted, so no IV.
+        if isinstance(key, (SharedKey, SelfKey)) and key.metadata.iv_nonce is None:
+            key.metadata.iv_nonce = EncryptionUtil.generate_iv_nonce()
         if isinstance(key, SharedKey):
             return self._put_shared_key(key, value)
         elif isinstance(key, SelfKey):
@@ -198,8 +205,9 @@ class AtClient(ABC):
         # already honors ivNonce when present.
         if key.metadata.iv_nonce is None:
             key.metadata.iv_nonce = EncryptionUtil.generate_iv_nonce()
+        self_key = self.keys[KeysUtil.self_encryption_key_name]
         try:
-            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self.keys[KeysUtil.self_encryption_key_name], key.metadata.iv_nonce)
+            cipher_text = EncryptionUtil.aes_encrypt_from_base64(value, self_key, key.metadata.iv_nonce)
         except Exception as e:
             raise AtEncryptionException(f"Failed to encrypt value with self encryption key - {e}")
         
