@@ -113,7 +113,16 @@ class AtMonitorConnection(AtSecondaryConnection):
         
         self._last_heartbeat_sent_time = self._last_heartbeat_ack_time = TimeUtil.current_time_millis()
         self.disconnect()
-        
+
+    @staticmethod
+    def _is_shared_key_notification(atsign, key):
+        """True if `key` is an incoming shared-key notification for `atsign`.
+
+        e.g. "@alice:shared_key@bob" when we (alice) are the receiver. Uses
+        to_string() — calling the bound method, not stringifying it.
+        """
+        return key.startswith(atsign.to_string() + ":shared_key@")
+
     def _run(self):
         what = ""
         first = True
@@ -164,7 +173,7 @@ class AtMonitorConnection(AtSecondaryConnection):
                         if uuid == "-1":
                             event_type = AtEventType.STATS_NOTIFICATION
                         elif operation == "update":
-                            if key.startswith(str(self.atsign.to_string) + ":shared_key@"):
+                            if self._is_shared_key_notification(self.atsign, key):
                                 event_type = AtEventType.SHARED_KEY_NOTIFICATION
                             else:
                                 event_type = AtEventType.UPDATE_NOTIFICATION
