@@ -5,8 +5,6 @@ name: interop (Python <-> Dart)
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ fix/put-get-random-iv ]   # TEMP validate
 
 permissions:
   contents: read
