@@ -77,6 +77,9 @@ jobs:
 
       - name: Run interop test
         run: |
+          # Start from clean Dart local storage (keeps .atKeys). Harmless on a fresh
+          # runner; prevents stale-key errors when re-running against a recreated EE.
+          rm -rf /tmp/eehome/.atsign/storage
           HOME=/tmp/eehome AT_INTEROP=1 \
             AT_ROOT=vip.ve.atsign.zone:64 AT_ROOT_DOMAIN=vip.ve.atsign.zone \
             python -m unittest discover -s test -p 'interop_test.py' -v

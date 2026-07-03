@@ -29,6 +29,10 @@ Env (all optional, EE-friendly defaults): `AT_INTEROP_ATSIGN1` (`@alpha`),
 `AT_INTEROP_ATSIGN2` (`@bravo`), `AT_ROOT` (`vip.ve.atsign.zone:64`), `AT_ROOT_DOMAIN`
 (host of `AT_ROOT`).
 
+> Re-running against a **recreated** EE? Clear the Dart client's local storage first
+> (`rm -rf $HOME/.atsign/storage`) — it caches keys from the previous atServer and will
+> otherwise fail to decrypt after re-onboarding. A fresh CI runner never hits this.
+
 ## CI
 A draft opt-in workflow is in `.github/workflows/interop.yml` (manual
 `workflow_dispatch`): it starts the ephemeral environment, onboards two atSigns,
