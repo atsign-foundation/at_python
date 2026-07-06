@@ -1,0 +1,74 @@
+# Opt-in cross-SDK IV interop test (Python at_client <-> Dart at_client).
+# Manual only (workflow_dispatch): starts the ephemeral environment container,
+# onboards two test atSigns via CRAM, and runs test/interop_test.py with AT_INTEROP=1.
+name: interop (Python <-> Dart)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: interop-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  interop:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      # Run the SDK from source (deps installed from poetry.lock; package not built).
+      PYTHONPATH: ${{ github.workspace }}
+    services:
+      ee:
+        image: atsigncompany/ephemeral
+        env:
+          DNS_FQDN: vip.ve.atsign.zone
+          FIRST_PORT: 2500
+        ports:
+          - 64:64
+          - 2500-2540:2500-2540
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Resolve the EE FQDN to localhost (matches the cert CN)
+        run: echo "127.0.0.1 vip.ve.atsign.zone" | sudo tee -a /etc/hosts
+
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
+        with:
+          python-version: '3.14'
+      - uses: dart-lang/setup-dart@65eb853c7ba17dde3be364c3d2858773e7144260 # v1.7.2
+      - name: Install uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
+      - name: Install SDK dependencies (from poetry.lock)
+        run: |
+          sudo apt-get install -y python3-poetry-plugin-export
+          uv venv
+          . .venv/bin/activate
+          poetry export --format requirements.txt --output requirements.txt
+          uv pip install --require-hashes -r requirements.txt
+          echo "$PWD/.venv/bin" >> "$GITHUB_PATH"
+
+      - name: Wait for the EE root, then onboard @alpha and @bravo (CRAM)
+        env:
+          HOME: /tmp/eehome
+        run: |
+          mkdir -p "$HOME/.atsign/keys"
+          sleep 30   # let the root register the atServers
+          python test/interop/onboard.py @alpha @bravo
+
+      - name: dart pub get (interop helper)
+        run: dart pub get
+        working-directory: test/interop
+
+      - name: Run interop test
+        env:
+          HOME: /tmp/eehome
+          AT_INTEROP: '1'
+          AT_ROOT: vip.ve.atsign.zone:64
+          AT_ROOT_DOMAIN: vip.ve.atsign.zone
+        run: |
+          rm -rf /tmp/eehome/.atsign/storage   # clean Dart local state (keeps .atKeys)
+          python -m unittest discover -s test -p 'interop_test.py' -v

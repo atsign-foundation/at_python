@@ -181,6 +181,7 @@ class UpdateVerbBuilder(VerbBuilder):
         self.shared_key_enc = metadata.shared_key_enc
         self.pub_key_cs = metadata.pub_key_cs
         self.encoding = metadata.encoding
+        self.iv_nonce = metadata.iv_nonce
         return self
 
     def with_at_key(self, at_key, value):
@@ -228,6 +229,7 @@ class UpdateVerbBuilder(VerbBuilder):
         metadata.shared_key_enc = self.shared_key_enc
         metadata.pub_key_cs = self.pub_key_cs
         metadata.encoding = self.encoding
+        metadata.iv_nonce = getattr(self, "iv_nonce", None)
         return str(metadata)
 
 class LlookupVerbBuilder:
