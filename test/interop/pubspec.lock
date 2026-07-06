@@ -61,10 +61,10 @@ packages:
     dependency: "direct main"
     description:
       name: at_cli_commons
-      sha256: "8a651a9baf9c83e689bd80a5e9b4e1b2bb3e2f147475fdefa4cf48a9eb78fd92"
+      sha256: c94da89550605068d83e70ca2299d20a087101a8cb235e789a8bd5e29b6b7895
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "3.1.0"
   at_client:
     dependency: "direct main"
     description:
