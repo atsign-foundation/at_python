@@ -32,6 +32,14 @@ class MonitorHeartbeatTest(unittest.TestCase):
             self.assertTrue(b.should_be_running_lock.acquire(blocking=False))
             b.should_be_running_lock.release()
 
+    def test_stop_heart_beat_ends_the_thread(self):
+        """The heartbeat loop must exit promptly when stopped, not at process exit."""
+        conn = self._connection()
+        self.assertTrue(conn._heartbeat_thread.is_alive())
+        conn.stop_heart_beat()
+        conn._heartbeat_thread.join(timeout=2)
+        self.assertFalse(conn._heartbeat_thread.is_alive())
+
 
 if __name__ == "__main__":
     unittest.main()

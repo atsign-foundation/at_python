@@ -33,11 +33,18 @@ class AtMonitorConnection(AtSecondaryConnection):
 
     def start_heart_beat(self):
         # Daemon: an abandoned connection's heartbeat must not keep the process alive.
+        # The stop event makes the loop's wait interruptible, so stop_heart_beat()
+        # takes effect promptly (the Dart SDK's heartbeat is a cancellable Timer).
+        self._heartbeat_stop_event = threading.Event()
         self._heartbeat_thread = threading.Thread(target=self._start_heart_beat, daemon=True)
         self._heartbeat_thread.start()
-    
+
+    def stop_heart_beat(self):
+        """Stop this connection's heartbeat/restart loop."""
+        self._heartbeat_stop_event.set()
+
     def _start_heart_beat(self):
-        while True:
+        while not self._heartbeat_stop_event.is_set():
             self.should_be_running_lock.acquire()
             if self.should_be_running:
                 self.should_be_running_lock.release()
@@ -77,10 +84,7 @@ class AtMonitorConnection(AtSecondaryConnection):
                             pass
             else:
                 self.should_be_running_lock.release()
-            try:
-                time.sleep(self._heartbeat_interval_millis / 6000) # 6 * 1000 (from ms to s)
-            except Exception as ignore:
-                pass
+            self._heartbeat_stop_event.wait(self._heartbeat_interval_millis / 6000)  # 6 * 1000 (from ms to s)
                 
     def start_monitor(self):
         self._last_heartbeat_sent_time = self._last_heartbeat_ack_time = TimeUtil.current_time_millis()
