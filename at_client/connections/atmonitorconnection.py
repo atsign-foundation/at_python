@@ -15,14 +15,16 @@ from .atsecondaryconnection import AtSecondaryConnection
 import queue
 
 class AtMonitorConnection(AtSecondaryConnection):
-    last_received_time: int = 0
     running: bool = False
     should_be_running: bool = False
-    
-    def __init__(self, queue:queue.Queue, atsign:AtSign, address: Address, context:ssl.SSLContext=ssl.create_default_context(), verbose:bool=True, regex=".*"):
+
+    def __init__(self, queue: queue.Queue, atsign: AtSign, address: Address,
+                 context: ssl.SSLContext = ssl.create_default_context(),
+                 verbose: bool = True, regex=".*", last_received_time: int = 0):
         self.atsign = atsign
         self.queue = queue
         self.regex = regex
+        self.last_received_time = last_received_time
         self._verbose = verbose
         super().__init__(address, context, verbose)
         self._last_heartbeat_sent_time = TimeUtil.current_time_millis()
@@ -123,11 +125,15 @@ class AtMonitorConnection(AtSecondaryConnection):
         """
         return key.startswith(atsign.to_string() + ":shared_key@")
 
+    def _build_monitor_command(self):
+        """Monitor verb requesting notifications received after last_received_time."""
+        return "monitor:" + str(self.last_received_time) + " " + self.regex
+
     def _run(self):
         what = ""
         first = True
         try:
-            monitor_cmd = "monitor:" + str(self.last_received_time) + " " + self.regex
+            monitor_cmd = self._build_monitor_command()
             what = "send monitor command " + monitor_cmd
             self.execute_command(command=monitor_cmd, retry_on_exception=True, read_the_response=False)
             print("Monitor started on " + str(self.atsign.to_string()))
