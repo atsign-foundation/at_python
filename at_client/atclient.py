@@ -373,14 +373,16 @@ class AtClient(ABC):
         if self.secondary_connection:
             self.secondary_connection.disconnect()
 
-    def start_monitor(self, regex=".*"):
+    def start_monitor(self, regex=".*", last_received_time=0):
         if self.queue != None:
             global should_be_running_lock
             what = ""
             try:
                 if self.monitor_connection == None:
                     what = "construct an AtMonitorConnection"
-                    self.monitor_connection = AtMonitorConnection(queue=self.queue, atsign=self.atsign, address=self.secondary_address, verbose=self.verbose, regex=regex)
+                    self.monitor_connection = AtMonitorConnection(
+                        queue=self.queue, atsign=self.atsign, address=self.secondary_address,
+                        verbose=self.verbose, regex=regex, last_received_time=last_received_time)
                     self.monitor_connection.connect()
                     AuthUtil.authenticate_with_pkam(self.monitor_connection, self.atsign, self.keys)
                 should_be_running_lock.acquire(blocking=1)
