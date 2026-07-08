@@ -17,7 +17,6 @@ from .exception.atexception import *
 from .connections.atrootconnection import AtRootConnection
 from .connections.atsecondaryconnection import AtSecondaryConnection
 from .connections.atmonitorconnection import AtMonitorConnection
-from .util.atconstants import *
 from .connections.address import Address
 from .common.keys import AtKey, Keys, SharedKey, PrivateHiddenKey, PublicKey, SelfKey
 from .util.authutil import AuthUtil
@@ -375,7 +374,6 @@ class AtClient(ABC):
 
     def start_monitor(self, regex=".*", last_received_time=0):
         if self.queue != None:
-            global should_be_running_lock
             what = ""
             try:
                 if self.monitor_connection == None:
@@ -385,13 +383,13 @@ class AtClient(ABC):
                         verbose=self.verbose, regex=regex, last_received_time=last_received_time)
                     self.monitor_connection.connect()
                     AuthUtil.authenticate_with_pkam(self.monitor_connection, self.atsign, self.keys)
-                should_be_running_lock.acquire(blocking=1)
+                self.monitor_connection.should_be_running_lock.acquire(blocking=1)
                 if not self.monitor_connection.running:
-                    should_be_running_lock.release()
+                    self.monitor_connection.should_be_running_lock.release()
                     what = "call monitor_connection.start_monitor()"
                     self.monitor_connection.start_monitor()
                 else:
-                    should_be_running_lock.release()
+                    self.monitor_connection.should_be_running_lock.release()
             except Exception as e:
                 print("SEVERE: failed to " + what + " : " + str(e))
                 traceback.print_exc()
@@ -400,18 +398,17 @@ class AtClient(ABC):
         
     def stop_monitor(self):
         if self.queue != None:
-            global should_be_running_lock
             what = ""
             try:
                 if self.monitor_connection == None:
                     return
-                should_be_running_lock.acquire(blocking=1)
+                self.monitor_connection.should_be_running_lock.acquire(blocking=1)
                 if not self.monitor_connection.running:
-                    should_be_running_lock.release()
+                    self.monitor_connection.should_be_running_lock.release()
                     what = "call monitor_connection.stop_monitor()"
                     self.monitor_connection.stop_monitor()
                 else:
-                    should_be_running_lock.release()
+                    self.monitor_connection.should_be_running_lock.release()
             except Exception as e:
                 print("SEVERE: failed to " + what + " : " + str(e))
                 traceback.print_exc()
