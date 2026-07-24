@@ -30,7 +30,7 @@ jobs:
           - 64:64
           - 2500-2540:2500-2540
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Resolve the EE FQDN to localhost (matches the cert CN)
         run: echo "127.0.0.1 vip.ve.atsign.zone" | sudo tee -a /etc/hosts
