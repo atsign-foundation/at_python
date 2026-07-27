@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: at_auth
-      sha256: "7a4d124122d6b99f6414be8535b6b15d3b8ba81f93597a56fa12460e7f238444"
+      sha256: "722cfadbf0795c705d9aada225fc142e9cba7827356c0485fe62b7d454ade142"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   at_base2e15:
     dependency: transitive
     description:
@@ -61,34 +61,34 @@ packages:
     dependency: "direct main"
     description:
       name: at_cli_commons
-      sha256: c94da89550605068d83e70ca2299d20a087101a8cb235e789a8bd5e29b6b7895
+      sha256: "13ce41e016a6e8e16dc4a8baf95fe6919576335e800c7ddb9e36ae72bae3d128"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   at_client:
     dependency: "direct main"
     description:
       name: at_client
-      sha256: "933dd8fc994e36680e011d58e6a2393e4f2e16e8ae4167e49856414db7250768"
+      sha256: "36fc9cea514ad7e12d08268d7295b892a51aa75f7d7e828a311f52063f3b1413"
       url: "https://pub.dev"
     source: hosted
-    version: "3.12.0"
+    version: "3.14.0"
   at_commons:
     dependency: transitive
     description:
       name: at_commons
-      sha256: "3deadcb1f1e0e25550ebc638524a09450f61cfc580db6f50b538f58f787077ac"
+      sha256: fd878c65d9628f0fbba9e724ead7995412394ae614ff0eac33384235c5494286
       url: "https://pub.dev"
     source: hosted
-    version: "5.11.0"
+    version: "5.13.0"
   at_lookup:
     dependency: transitive
     description:
       name: at_lookup
-      sha256: f3e88bfd5144cd5dce845adf3fa89aeb79c97a0e79f8c61aafd4a266ec3b1095
+      sha256: "9785cc5adacdfdc287dbc73f656fc3ed3672db13ade0434f9c6b0b2f03dd1f58"
       url: "https://pub.dev"
     source: hosted
-    version: "3.5.0"
+    version: "3.6.0"
   at_onboarding_cli:
     dependency: transitive
     description:
@@ -101,18 +101,10 @@ packages:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
-      sha256: "869949a4e76b7c8ad8f5a5aa4698f7df11a177964c9e3261b96c1dd0d5ee03e3"
+      sha256: f813749be78fe69c87202d89a7f6949ba3578eb49934c2c3d7273d508520e8dd
       url: "https://pub.dev"
     source: hosted
-    version: "4.3.5"
-  at_persistence_spec:
-    dependency: transitive
-    description:
-      name: at_persistence_spec
-      sha256: "2b8a414f53ae2368023862cda0b6c2ccef3a3876acc355ea064654df434aedbd"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.0"
+    version: "5.2.0"
   at_server_status:
     dependency: transitive
     description:
@@ -433,6 +425,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.2"
+  sqlite3:
+    dependency: transitive
+    description:
+      name: sqlite3
+      sha256: "3145bd74dcdb4fd6f5c6dda4d4e4490a8087d7f286a14dee5d37087290f0f8a2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.9.4"
   stack_trace:
     dependency: transitive
     description:
