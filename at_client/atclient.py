@@ -147,10 +147,38 @@ class AtClient(ABC):
             else:
                 raise response.get_exception()
 
+        stored_key = response.get_raw_data_response()
         try:
-            return EncryptionUtil.rsa_decrypt_from_base64(response.get_raw_data_response(), self.keys[KeysUtil.encryption_private_key_name])
+            return EncryptionUtil.rsa_decrypt_from_base64(stored_key, self.keys[KeysUtil.encryption_private_key_name])
         except Exception as e:
+            # A stored value that is not the right length cannot be an RSA ciphertext
+            # for our key at all, so the record is unusable rather than merely
+            # undecryptable. Left to stand, every later send to this recipient fails
+            # identically for ever, and restarting re-reads the same record. Treat it
+            # like a missing key and mint a fresh one, as the not-found branch above does.
+            if self._stored_shared_key_is_unusable(stored_key):
+                print(f"{to_lookup} is unusable ({e}); replacing it with a new shared key")
+                return self.create_shared_encryption_key(key)
             raise AtDecryptionException(f"Failed to decrypt {to_lookup} - {e}")
+
+    def _stored_shared_key_is_unusable(self, stored_key):
+        """True when a stored shared key cannot be an RSA ciphertext for our own key.
+
+        RSA ciphertext is exactly as long as the key, so a different length means the
+        record is damaged — for example a truncated or interrupted write.
+
+        Deliberately narrow: a value of the correct length that still fails to decrypt
+        is far more likely to mean the wrong keys are loaded, and replacing the shared
+        key in that case would rotate a working key for both parties. That case keeps
+        raising.
+        """
+        try:
+            ciphertext = base64.b64decode(stored_key)
+            private_key = EncryptionUtil.private_key_from_base64(
+                self.keys[KeysUtil.encryption_private_key_name])
+            return len(ciphertext) != private_key.key_size // 8
+        except Exception:
+            return False  # cannot tell: keep the existing behaviour
         
     def get_encryption_key_shared_by_other(self, shared_key: SharedKey):
         shared_shared_key_name = shared_key.get_shared_shared_key_name()
