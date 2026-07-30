@@ -140,7 +140,16 @@ class AtConnection(ABC):
                 print(f"\tSENT: {repr(command.strip())}")
 
             if read_the_response:
-                raw_response = self.read()
+                try:
+                    raw_response = self.read()
+                except Exception:
+                    # The command was sent but its reply was not fully read, so the
+                    # reply is still queued on this socket. Reusing the connection
+                    # would hand that reply to the NEXT command, and every command
+                    # after it would read the previous one's response. Discard the
+                    # connection so the next use starts from a clean stream.
+                    self.disconnect()
+                    raise
                 if self._verbose:
                     print(f"\tRCVD: {repr(raw_response)}")
 
