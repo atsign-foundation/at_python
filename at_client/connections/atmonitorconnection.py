@@ -18,7 +18,7 @@ class AtMonitorConnection(AtSecondaryConnection):
     should_be_running: bool = False
 
     def __init__(self, queue: queue.Queue, atsign: AtSign, address: Address,
-                 context: ssl.SSLContext = ssl.create_default_context(),
+                 context: ssl.SSLContext = None,
                  verbose: bool = True, regex=".*", last_received_time: int = 0):
         self.atsign = atsign
         self.queue = queue

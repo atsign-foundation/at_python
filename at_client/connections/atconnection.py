@@ -15,19 +15,29 @@ class AtConnection(ABC):
     Abstract base class for connecting to and communicating with an atprotocol server.
     """
 
-    def __init__(self, host:str, port:int, context:ssl.SSLContext, verbose:bool=False):
+    def __init__(self, host:str, port:int, context:ssl.SSLContext=None, verbose:bool=False):
         """
         Initialize the AtConnection object.
 
         Parameters:
         - host (str): The host name or IP address of the server.
         - port (int): The port number of the server.
-        - context (ssl.SSLContext): The SSL context for secure connections.
+        - context (ssl.SSLContext, optional): The SSL context for secure connections.
         - verbose (bool, optional): Indicates if verbose output is enabled (default is False).
         """
+        if isinstance(context, ssl.SSLContext):
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
+            self._context = context
+        elif isinstance(context, bool):
+            verbose = context
+            self._context = ssl.create_default_context()
+            self._context.minimum_version = ssl.TLSVersion.TLSv1_2
+        else:
+            self._context = ssl.create_default_context()
+            self._context.minimum_version = ssl.TLSVersion.TLSv1_2
+
         self._host = host
         self._port = port
-        self._context = context
         self._addr_info = socket.getaddrinfo(host, port)[0][-1]
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._secure_root_socket = None

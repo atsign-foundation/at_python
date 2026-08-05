@@ -9,7 +9,7 @@ class AtSecondaryConnection(AtConnection):
     Subclass of AtConnection representing a connection to the secondary server in the atprotocol.
     """
 
-    def __init__(self, address: Address, context:ssl.SSLContext=ssl.create_default_context(), verbose:bool=False):
+    def __init__(self, address: Address, context:ssl.SSLContext=None, verbose:bool=False):
         """
         Initialize the AtSecondaryConnection object.
 
@@ -20,7 +20,7 @@ class AtSecondaryConnection(AtConnection):
         port : int
             The port number of the secondary server.
         context : ssl.SSLContext, optional
-            The SSL context for secure connections (default is ssl.create_default_context()).
+            The SSL context for secure connections (default is None).
         verbose : bool, optional
             Indicates if verbose output is enabled (default is False).
         """
