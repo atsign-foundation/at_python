@@ -14,7 +14,7 @@ class AtRootConnection(AtConnection):
     __instance = None
 
     @staticmethod
-    def get_instance(host:str='root.atsign.org', port:int=64, context:ssl.SSLContext=ssl.create_default_context(), verbose:bool=False):
+    def get_instance(host:str='root.atsign.org', port:int=64, context:ssl.SSLContext=None, verbose:bool=False):
         """
         Get an instance of AtRootConnection using the singleton pattern.
 
@@ -25,7 +25,7 @@ class AtRootConnection(AtConnection):
         port : int, optional
             The port number of the root server (default is 64).
         context : ssl.SSLContext, optional
-            The SSL context for secure connections (default is ssl.create_default_context()).
+            The SSL context for secure connections (default is None).
         verbose : bool, optional
             Indicates if verbose output is enabled (default is False).
 
