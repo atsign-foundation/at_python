@@ -25,12 +25,19 @@ class AtConnection(ABC):
         - context (ssl.SSLContext, optional): The SSL context for secure connections.
         - verbose (bool, optional): Indicates if verbose output is enabled (default is False).
         """
-        if context is None:
-            context = ssl.create_default_context()
-        context.minimum_version = ssl.TLSVersion.TLS1_2
+        if isinstance(context, ssl.SSLContext):
+            context.minimum_version = ssl.TLSVersion.TLSv1_2
+            self._context = context
+        elif isinstance(context, bool):
+            verbose = context
+            self._context = ssl.create_default_context()
+            self._context.minimum_version = ssl.TLSVersion.TLSv1_2
+        else:
+            self._context = ssl.create_default_context()
+            self._context.minimum_version = ssl.TLSVersion.TLSv1_2
+
         self._host = host
         self._port = port
-        self._context = context
         self._addr_info = socket.getaddrinfo(host, port)[0][-1]
         self._socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self._secure_root_socket = None
