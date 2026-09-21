@@ -185,7 +185,7 @@ class UpdateVerbBuilder(VerbBuilder):
         return self
 
     def with_at_key(self, at_key, value):
-        self.set_key_name(at_key.name)
+        self.set_key_name(at_key.get_fully_qualified_key_name())
         self.set_shared_by(str(at_key.shared_by))
         if at_key.shared_with and str(at_key.shared_with):
             self.set_shared_with(str(at_key.shared_with))
@@ -276,7 +276,7 @@ class LlookupVerbBuilder:
         return self
 
     def with_at_key(self, at_key, type):
-        self.set_key_name(at_key.name)
+        self.set_key_name(at_key.get_fully_qualified_key_name())
         self.set_shared_by(str(at_key.shared_by))
         if at_key.shared_with is not None and at_key.shared_with:
             self.set_shared_with(str(at_key.shared_with))
@@ -333,7 +333,7 @@ class LookupVerbBuilder:
         return self
 
     def with_shared_key(self, shared_key, type):
-        self.set_key_name(shared_key.name)
+        self.set_key_name(shared_key.get_fully_qualified_key_name())
         self.set_shared_with(str(shared_key.shared_with))
         self.set_type(type)
         return self
@@ -383,7 +383,7 @@ class PlookupVerbBuilder:
         return self
 
     def with_at_key(self, at_key, type):
-        self.set_key_name(at_key.name)
+        self.set_key_name(at_key.get_fully_qualified_key_name())
         self.set_shared_by(str(at_key.shared_by))
         self.set_type(type)
         return self
@@ -440,7 +440,7 @@ class DeleteVerbBuilder:
         return self
 
     def with_at_key(self, at_key):
-        self.set_key_name(at_key.name)
+        self.set_key_name(at_key.get_fully_qualified_key_name())
         self.set_shared_by(str(at_key.shared_by))
         if at_key.shared_with and not str(at_key.shared_with).strip() == "":
             self.set_shared_with(str(at_key.shared_with))
