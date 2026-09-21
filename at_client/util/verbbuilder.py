@@ -543,7 +543,7 @@ class NotifyVerbBuilder(VerbBuilder):
         return self
 
     def with_at_key(self, at_key, encrypted_value, operation=OperationEnum.UPDATE, session_id=None):
-        self.set_key_name(at_key.name)
+        self.set_key_name(at_key.get_fully_qualified_key_name())
         self.set_shared_by(str(at_key.shared_by))
         self.set_shared_with(str(at_key.shared_with))
         self.set_is_hidden(at_key.metadata.is_hidden)
@@ -551,7 +551,7 @@ class NotifyVerbBuilder(VerbBuilder):
         self.set_is_cached(at_key.metadata.is_cached)
         self.set_metadata(at_key.metadata)
         self.set_value(encrypted_value)
-        self.set_namespace(at_key.namespace)
+        self.set_namespace(None)
         self.set_session_id(session_id)
         self.operation = operation
         if self.message_type is None:
