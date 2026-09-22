@@ -328,47 +328,67 @@ class AtVerbBuilderTest(unittest.TestCase):
         self.assertEqual("delete:@bob:test@alice", command)
 
 
+    def test_namespaced_at_key_verb_builders(self):
+        alice = AtSign("@alice")
+        bob = AtSign("@bob")
+        public_key = PublicKey("publickey", alice).set_namespace("mynamespace")
+        shared_key = SharedKey("sharedkey", alice, bob).set_namespace("mynamespace")
+
+        command = UpdateVerbBuilder().with_at_key(public_key, "value").build()
+        self.assertEqual("update:public:publickey.mynamespace@alice value", command)
+
+        command = LlookupVerbBuilder().with_at_key(shared_key, LlookupVerbBuilder.Type.NONE).build()
+        self.assertEqual("llookup:@bob:sharedkey.mynamespace@alice", command)
+
+        command = LookupVerbBuilder().with_shared_key(shared_key, LookupVerbBuilder.Type.NONE).build()
+        self.assertEqual("lookup:sharedkey.mynamespace@bob", command)
+
+        command = PlookupVerbBuilder().with_at_key(public_key, PlookupVerbBuilder.Type.NONE).build()
+        self.assertEqual("plookup:publickey.mynamespace@alice", command)
+
+        command = DeleteVerbBuilder().with_at_key(shared_key).build()
+        self.assertEqual("delete:@bob:sharedkey.mynamespace@alice", command)
+
+        command = NotifyVerbBuilder().with_at_key(shared_key, "value").build()
+        command_without_id = re.sub(r'\bid:[^:]*:', '', command)
+        self.assertEqual("notify:update:isEncrypted:true:@bob:sharedkey.mynamespace@alice:value", command_without_id)
+
     def test_notify_verb_builder(self):
         # with a shared key, no metadata and no namespace
         sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        print(command_without_id)
-        self.assertRegex(command_without_id, "notify:update:isEncrypted:true:@bob:test@alice:valuevaluevalue")
+        self.assertEqual("notify:update:isEncrypted:true:@bob:test@alice:valuevaluevalue", command_without_id)
         
         #with a shared key, metadata and no namespace
         sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
-        metadata = Metadata(ttl="1000", ttr="-1")
+        metadata = Metadata(ttl=1000, ttr=-1)
         sk.metadata = metadata
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        self.assertRegex(command_without_id, "notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test@alice:valuevaluevalue")
+        self.assertEqual("notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test@alice:valuevaluevalue", command_without_id)
         
         #with a shared key, no metadata and namespace
-        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
-        sk.namespace = ".dave"
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob")).set_namespace("dave")
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        self.assertRegex(command_without_id, "notify:update:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
+        self.assertEqual("notify:update:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue", command_without_id)
         
         #with a shared key, metadata and namespace
-        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
-        metadata = Metadata(ttl="1000", ttr="-1")
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob")).set_namespace("dave")
+        metadata = Metadata(ttl=1000, ttr=-1)
         sk.metadata = metadata
-        sk.namespace = ".dave"
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        self.assertRegex(command_without_id, "notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
-        
+        self.assertEqual("notify:update:ttl:1000:ttr:-1:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue", command_without_id)
         
         #with a shared key, with metadata and namespace (no caching)
-        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob"))
-        metadata = Metadata(ttln="1000")
+        sk = SharedKey("test", AtSign("@alice"), AtSign("@bob")).set_namespace("dave")
+        metadata = Metadata(ttln=1000)
         sk.metadata = metadata
-        sk.namespace = ".dave"
         command = NotifyVerbBuilder().with_at_key(sk, "valuevaluevalue").build()
         command_without_id = re.sub(r'\bid:[^:]*:', '', command)
-        self.assertRegex(command_without_id, "notify:update:ttln:1000:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue")
+        self.assertEqual("notify:update:ttln:1000:isEncrypted:true:@bob:test.dave@alice:valuevaluevalue", command_without_id)
         
 if __name__ == '__main__':
     unittest.main()
