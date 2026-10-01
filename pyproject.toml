@@ -17,7 +17,7 @@ requests = "2.34.2"
 
 [tool.poetry.group.dev.dependencies]
 pip ="26.2.1"
-flake8 = "7.4.0"
+flake8 = "7.4.1"
 pytest = "9.1.1"
 
 [build-system]
