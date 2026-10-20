@@ -11,6 +11,18 @@
 This repo contains library, samples and examples for developers who wish
 to work with the atPlatform from Python code.
 
+## Python 3.10 deprecation
+
+As of Oct 2026 Python 3.10 is end-of-life, and will no longer receive
+security patches. We have previously
+[decided](https://github.com/atsign-foundation/at_protocol/blob/trunk/decisions/2024-10-python-deprecation.md)
+to continue support for 3.10 for another 6 months (on a best efforts basis).
+From Apr 2027, Python 3.10 will be removeded from the test
+matrix, and pyproject.toml bumped to require Python 3.11.
+
+Older versions of this package will of course remain available on
+[PyPI](https://pypi.org/project/atsdk/), though they may lack features,
+
 ## Getting Started
 
 ### 1. Installation
