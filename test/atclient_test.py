@@ -1,4 +1,4 @@
-import unittest, random, string
+import unittest, random, string, uuid
 from configparser import ConfigParser
 
 from at_client import AtClient
@@ -29,20 +29,29 @@ class AtClientTest(unittest.TestCase):
 
     @skip_if_dependabot_pr
     def test_get_at_keys(self):
-        """Test Scan Verb using get_at_keys"""
-
-        # Test to fetch all keys
+        """get_at_keys lists exactly the self, public and shared keys matching its regex"""
         atsign = AtSign(self.atsign2)
         atclient = AtClient(atsign, verbose=self.verbose)
-        my_keys = atclient.get_at_keys("", fetch_metadata=True)
-        self.assertTrue(len(my_keys)>0)
+        token = uuid.uuid4().hex
+        created = [
+            SelfKey(f"scan_self_{token}", atsign),
+            PublicKey(f"scan_public_{token}", atsign),
+            SharedKey(f"scan_shared_{token}", atsign, AtSign(self.atsign1)),
+        ]
+        for key in created:
+            key.set_time_to_live(10 * 60 * 1000)
+            atclient.put(key, "value")
+            self.addCleanup(atclient.delete, key)
+        expected = {str(key).lower() for key in created}
 
-        # Test Regex functionality
-        my_keys = atclient.get_at_keys("test", fetch_metadata=True)
-        self.assertEqual(len(my_keys), 4)
+        all_keys = atclient.get_at_keys("", fetch_metadata=True)
+        self.assertEqual(expected - {str(key).lower() for key in all_keys}, set())
 
-        my_keys = atclient.get_at_keys("no_key", fetch_metadata=True)
-        self.assertEqual(len(my_keys), 0)
+        my_keys = atclient.get_at_keys(token, fetch_metadata=True)
+        self.assertEqual({str(key).lower() for key in my_keys}, expected)
+
+        my_keys = atclient.get_at_keys(uuid.uuid4().hex, fetch_metadata=True)
+        self.assertEqual([str(key) for key in my_keys], [])
 
     @skip_if_dependabot_pr
     def test_put_public_key(self):
