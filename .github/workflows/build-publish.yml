@@ -35,6 +35,7 @@ jobs:
       run: |
         mv README.PyPI.md.stub README.PyPI.md
         tail -n +2 README.md >> README.PyPI.md
+        mv README.PyPI.md README.md
     - name: Build using Poetry
       run: |
         poetry build

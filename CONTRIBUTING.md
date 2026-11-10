@@ -29,10 +29,10 @@ and configurations are documented
 ### Prerequisites
 
 1. Download latest python from <https://www.python.org/downloads/>
-2. Install required libraries using below command.
+2. Once this repo is cloned install required libraries using:
 
    ```sh
-   pip install -r requirements.txt
+   pip install .
    ```
 
 ### GitHub Repository Clone
