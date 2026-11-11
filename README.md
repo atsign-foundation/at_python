@@ -25,6 +25,18 @@ Older versions of this package will of course remain available on
 
 ## Getting Started
 
+### 0. Use a virtual environment (venv)
+
+Modern Linux distributions don't like you using `pip` to install Python
+packages into the system namespace. So it's best to start with a virtual
+environment ([venv](https://docs.python.org/3/library/venv.html)).
+
+Even if you're using MacOS or Windows, it's highly recommended to start with a
+venv.
+
+We also suggest using [uv](https://docs.astral.sh/uv/) to create your venv and
+install stuff into it.
+
 ### 1. Installation
 
 This package can be installed from PyPI with:
@@ -36,7 +48,6 @@ pip install atsdk
 Alternatively clone this repo and from the repo root:
 
 ```shell
-pip install -r requirements.txt
 pip install .
 ```
 
