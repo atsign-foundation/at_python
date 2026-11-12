@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: at_auth
-      sha256: "722cfadbf0795c705d9aada225fc142e9cba7827356c0485fe62b7d454ade142"
+      sha256: cbbff946b361b553a77c038dc0be4456eeaf7babdce6a9fb9b789e172d3ad22a
       url: "https://pub.dev"
     source: hosted
-    version: "3.2.0"
+    version: "4.0.0"
   at_base2e15:
     dependency: transitive
     description:
@@ -53,66 +53,58 @@ packages:
     dependency: transitive
     description:
       name: at_chops
-      sha256: "4d6ab2cbf9fb87e0d575ffe0cc0622075677b679ea875d5ac39e475ae4be188a"
+      sha256: afe75e99e9ace79d1f90a67d48e6b682a934f96db76ab84c245dc0ca0b4fc3f4
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.0"
+    version: "3.7.1"
   at_cli_commons:
     dependency: "direct main"
     description:
       name: at_cli_commons
-      sha256: "13ce41e016a6e8e16dc4a8baf95fe6919576335e800c7ddb9e36ae72bae3d128"
+      sha256: "63f6a0630f1e99a99beaf74b799652f56250640d457748537ee6a576f6613162"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.1"
+    version: "4.0.0"
   at_client:
     dependency: "direct main"
     description:
       name: at_client
-      sha256: "36fc9cea514ad7e12d08268d7295b892a51aa75f7d7e828a311f52063f3b1413"
+      sha256: "04ba05bc3eba40718b3d03999921751d8b833754b48cbfeed607656cb5460691"
       url: "https://pub.dev"
     source: hosted
-    version: "3.14.0"
+    version: "4.0.0"
+  at_client_cli:
+    dependency: transitive
+    description:
+      name: at_client_cli
+      sha256: "3b0811920219c97018fb120de3f61808eba34ff3c4c35cb75335c10b5db7d3d1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   at_commons:
     dependency: transitive
     description:
       name: at_commons
-      sha256: fd878c65d9628f0fbba9e724ead7995412394ae614ff0eac33384235c5494286
+      sha256: "107f04c2b777d0763f4fe2ed88c7f61db5df99d58c322a0db2ee1315779500b0"
       url: "https://pub.dev"
     source: hosted
-    version: "5.13.0"
+    version: "5.25.0"
   at_lookup:
     dependency: transitive
     description:
       name: at_lookup
-      sha256: "9785cc5adacdfdc287dbc73f656fc3ed3672db13ade0434f9c6b0b2f03dd1f58"
+      sha256: a72ba90ed219e964fbf987abe2e14c111bbc7e09f6c3e922b5774cace2adb509
       url: "https://pub.dev"
     source: hosted
-    version: "3.6.0"
-  at_onboarding_cli:
-    dependency: transitive
-    description:
-      name: at_onboarding_cli
-      sha256: "40b9b40ff88bbfba50412bbc6fe4d5991958e6ccab9a1f434bba0eaa9af115b9"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.15.0"
+    version: "4.0.0"
   at_persistence_secondary_server:
     dependency: transitive
     description:
       name: at_persistence_secondary_server
-      sha256: f813749be78fe69c87202d89a7f6949ba3578eb49934c2c3d7273d508520e8dd
+      sha256: "04b825f36ca2024795b26c70cdd6095607f6f019e9c54e4fb8a1ef2a5cf4371c"
       url: "https://pub.dev"
     source: hosted
-    version: "5.2.0"
-  at_server_status:
-    dependency: transitive
-    description:
-      name: at_server_status
-      sha256: bbce2d6226b5a381a5462ba99afc6e6d677043263a4eb659a731d0f51465bc54
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.1.1"
+    version: "5.4.0"
   at_utf7:
     dependency: transitive
     description:
@@ -125,10 +117,10 @@ packages:
     dependency: transitive
     description:
       name: at_utils
-      sha256: e974616a816e9f6f3b186f33efea823f345d193b6ea9b42f08d28f35848c4de1
+      sha256: "0c1d288c7d0a59e9548f3ea551dbfab2bf365e528d9479dc3e5be8095eddcd7d"
       url: "https://pub.dev"
     source: hosted
-    version: "3.4.0"
+    version: "4.0.0"
   better_cryptography:
     dependency: transitive
     description:
@@ -209,14 +201,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
-  dart_periphery:
-    dependency: transitive
-    description:
-      name: dart_periphery
-      sha256: "1c933dae787d65e6e66ee89db4a58ed74dc9213b83cea10c344585a256ca498a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.9.20"
   duration:
     dependency: transitive
     description:
@@ -257,14 +241,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  file:
-    dependency: transitive
-    description:
-      name: file
-      sha256: a3b4f84adafef897088c160faf7dfffb7696046cb13ae90b508c2cbc95d3b8d4
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.0.1"
   fixnum:
     dependency: transitive
     description:
@@ -305,14 +281,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.9.1"
-  internet_connection_checker:
-    dependency: transitive
-    description:
-      name: internet_connection_checker
-      sha256: "1c683e63e89c9ac66a40748b1b20889fd9804980da732bf2b58d6d5456c8e876"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.0+1"
   js:
     dependency: transitive
     description:
@@ -377,14 +345,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.2"
-  platform:
-    dependency: transitive
-    description:
-      name: platform
-      sha256: "5d6b1b0036a5f331ebc77c850ebc8506cbc1e9416c27e59b439f917a902a4984"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.1.6"
   pointycastle:
     dependency: transitive
     description:
@@ -409,14 +369,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.1"
-  process:
-    dependency: transitive
-    description:
-      name: process
-      sha256: c6248e4526673988586e8c00bb22a49210c258dc91df5227d5da9748ecf79744
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.0.5"
   source_span:
     dependency: transitive
     description:
@@ -433,14 +385,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.9.4"
-  stack_trace:
-    dependency: transitive
-    description:
-      name: stack_trace
-      sha256: "8b27215b45d22309b5cddda1aa2b19bdfec9df0e765f2de506401c071d38d1b1"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.12.1"
   string_scanner:
     dependency: transitive
     description:
